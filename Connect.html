@@ -182,9 +182,10 @@
   --text-muted: #e9e2d2;
   --accent-line: rgba(120,0,120,0.14);
   --floor-gap: 28px;
-  --floor-line-opacity: 0.45;
-  --sheen-opacity: 0.5;
-  --glass-alpha: 0.38;
+  --floor-line-opacity: 0.25;
+  --sheen-opacity: 0.32;
+  --glass-alpha: 0.23;
+
 }
 
 
@@ -221,7 +222,6 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
       to bottom,
       rgba(var(--purple-r),var(--purple-g),var(--purple-b),var(--floor-line-opacity)) 0px,
       rgba(var(--purple-r),var(--purple-g),var(--purple-b),var(--floor-line-opacity)) 1px,
-
       rgba(0,0,0,0) 1px,
       rgba(0,0,0,0) var(--floor-gap)
     ),
@@ -255,7 +255,8 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
     url('https://www.transparenttextures.com/patterns/asfalt-light.png');
   background-size: 100% 36%, 160px 160px;
   background-blend-mode: overlay;
-  opacity: 0.35;
+  opacity: 0.25;
+
   mix-blend-mode: overlay;
   border-radius: inherit;
 }
