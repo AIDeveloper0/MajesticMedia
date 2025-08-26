@@ -3,6 +3,7 @@
   <div class="connect-wrap">
     <section class="connect-frame" aria-labelledby="connect-title" role="region">
       <h1 id="connect-title" class="visually-hidden">Connect</h1>
+      <div class="amethyst-overlay" aria-hidden="true"></div>
 
       <div class="connect-inner">
         <!-- LEFT 2/3 (scrollable content area) -->
@@ -164,7 +165,10 @@
 /* color chosen from your RGB (120,0,120) -> #780078 */
 :root{
   --purple: #780078;
-  --purple-alpha: rgba(120,0,120,0.95);
+  --purple-r: 120;
+  --purple-g: 0;
+  --purple-b: 120;
+  --purple-alpha: rgba(var(--purple-r),var(--purple-g),var(--purple-b),0.95);
   --bg: #070006;                 /* darkened purple / near-black background */
   --frame-thickness: 20px;       /* rim thickness (per site rules) */
   --frame-inner-pad: 22px;       /* inner padding inside rim */
@@ -177,6 +181,10 @@
   --text-strong: #f6efe6;
   --text-muted: #e9e2d2;
   --accent-line: rgba(120,0,120,0.14);
+  --floor-gap: 28px;
+  --floor-line-opacity: 0.25;
+  --sheen-opacity: 0.32;
+  --glass-alpha: 0.23;
 }
 
 /* base / reset */
@@ -204,10 +212,23 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
   box-sizing: border-box;
   position: relative;
   border-radius: 8px;
-  overflow: visible;
+  overflow: hidden;
   padding: var(--frame-inner-pad);    /* inner padding = 22px */
   border: var(--frame-thickness) solid var(--purple-alpha); /* visible rim = 20px */
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.03));
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(var(--purple-r),var(--purple-g),var(--purple-b),var(--floor-line-opacity)) 0px,
+      rgba(var(--purple-r),var(--purple-g),var(--purple-b),var(--floor-line-opacity)) 1px,
+      rgba(0,0,0,0) 1px,
+      rgba(0,0,0,0) var(--floor-gap)
+    ),
+    linear-gradient(120deg, rgba(255,255,255,var(--sheen-opacity)) 0%, rgba(255,255,255,0) 35%),
+    linear-gradient(180deg, rgba(var(--purple-r),var(--purple-g),var(--purple-b),var(--glass-alpha)), rgba(20,0,20,0.22)),
+    radial-gradient(ellipse at 50% 80%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 85%);
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 100% auto, 100% 46%, cover, cover;
+  background-position: 0 0, 0 6%, center center, center bottom;
   /* subtle outer shadow */
   box-shadow: 0 12px 22px rgba(0,0,0,0.6), inset 0 2px 6px rgba(255,255,255,0.02);
 }
@@ -221,6 +242,20 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
   pointer-events:none;
   box-shadow: inset 0 0 0 1px rgba(120,0,120,0.09);
   z-index:0;
+}
+
+.amethyst-overlay{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(120deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 35%),
+    url('https://www.transparenttextures.com/patterns/asfalt-light.png');
+  background-size: 100% 36%, 160px 160px;
+  background-blend-mode: overlay;
+  opacity: 0.25;
+  mix-blend-mode: overlay;
+  border-radius: inherit;
 }
 
 /* inner layout: left & right columns */
@@ -261,12 +296,12 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
 
 /* generic panel */
 .panel{
-  background: linear-gradient(180deg, rgba(0,0,0,0.66), rgba(0,0,0,0.58));
+  background: none;
   border-radius: var(--radius);
   padding: 18px;
   color: var(--text-muted);
-  box-shadow: inset 0 6px 12px rgba(255,255,255,0.01), 0 6px 0 rgba(0,0,0,0.45);
-  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: none;
+  border: none;
   box-sizing: border-box;
   position: relative;
   z-index: 2;
@@ -391,7 +426,7 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
 .faq summary::-webkit-details-marker { display:none; }
 
 /* right column sizes (stacked) */
-.connect-right .panel { min-height: 120px; border-left: 6px solid var(--accent-line); flex-shrink: 0; }
+.connect-right .panel { min-height: 120px; flex-shrink: 0; }
 .contact { min-height: 420px; }  /* tall left-of-right area */
 .discord { min-height: 100px; }
 .winston { min-height: 100px; }
