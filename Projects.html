@@ -1,0 +1,906 @@
+<!-- Projects / Pulse — adjusted frame spacing (outer=28px, rim=20px, inner-pad=22px) -->
+<div id="projects-pulse">
+  <div class="frame">
+    <aside class="left-col" role="tablist" aria-label="Projects">
+      <!-- Buttons -->
+      <button class="proj-btn active" data-project="chrono" aria-selected="true">The Chrono-Viewer</button>
+      <button class="proj-btn" data-project="dire">The Dire Realm</button>
+      <button class="proj-btn" data-project="order">The Order of Chaos</button>
+      <button class="proj-btn" data-project="simulated">Simulated</button>
+      <button class="proj-btn" data-project="jackbox">Jackbox Party</button>
+      <button class="proj-btn" data-project="forgotten">Forgotten Media</button>
+      <button class="proj-btn" data-project="stories">The Stories We Tell</button>
+      <button class="proj-btn" data-project="hidden">Hidden Talents</button>
+      <button class="proj-btn" data-project="modern">Modern Tall Tales</button>
+      <button class="proj-btn" data-project="interstellar">Interstellar</button>
+      <button class="proj-btn" data-project="unscripted">Unscripted</button>
+      <button class="proj-btn" data-project="bok">The Bok Project</button>
+      <button class="proj-btn" data-project="school">The School of Media</button>
+    </aside>
+
+    <main class="right-col" tabindex="0">
+      <header class="entry-header">
+        <div id="entry-date">Aug 7, 2025</div>
+        <h1 id="entry-title">The Chrono-Viewer</h1>
+      </header>
+
+      <section class="entry-body" id="entry-body" aria-live="polite">
+        <!-- content injected by JS -->
+      </section>
+    </main>
+  </div>
+</div>
+
+<style>
+/* ---------- VARIABLES ---------- */
+:root{
+  --emerald: #007800;
+  --sapphire: #000078;
+
+  /* wrapper sizing (per your spec) */
+  --pulse-max-width: 1260px;
+  --pulse-min-height: 900px;
+
+  /* SPACING FORMULA VARIABLES (updated) */
+  --outer-padding: 28px;          /* showcase-wrap padding-top/bottom */
+  --frame-thickness: 20px;        /* visible rim top/bottom (was 14px) */
+  --frame-inner-pad: 22px;        /* inner padding inside the rim */
+
+  /* frame & slab geometry */
+  --strip-width: 18px;
+
+  /* LEFT slab / selector specific */
+  --left-width: 300px;            /* left area width must be 300px to match 300x1600 tile */
+  --left-padding: 18px;           /* inset so buttons avoid tile border edges */
+
+  /* textures */
+  --slab-tile: url("https://static1.squarespace.com/static/6891a6f0dcd941394db83fc9/t/689846feb71d0f1a6f597e60/1754810110786/1201886c-9828-46d9-9e47-182b490fcae7.jpg");
+  --micro-pattern: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='70' viewBox='0 0 80 70'><defs><pattern id='h' width='40' height='35' patternUnits='userSpaceOnUse'><g fill='none' stroke='%23000400' stroke-opacity='0.06' stroke-width='1'><path d='M10 17.5 L20 10 L30 17.5 L20 25 Z'/><path d='M30 17.5 L40 10 L50 17.5 L40 25 Z' transform='translate(-20,0)'/></g></pattern></defs><rect width='100%' height='100%' fill='url(%23h)'/></svg>");
+
+  /* floor / glass controls */
+  --glass-alpha: 0.18;
+  --sheen-opacity: 0.22;
+  --grain-opacity: 0.03;
+  --floor-gap: 28px;
+  --floor-line-opacity: 0.04;
+
+  /* tile dimensions (explicit) */
+  --tile-width: 300px;
+  --tile-height: 1600px;
+}
+
+/* ---------- RESET & OUTER WRAPPER ---------- */
+html,body{ height:100%; margin:0; background:#000; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+*{ box-sizing: border-box; }
+
+/* OUTER wrapper padding uses the outer-padding variable */
+#projects-pulse{
+  width:100%;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: var(--outer-padding); /* 28px top & bottom per formula */
+  box-sizing:border-box;
+}
+
+/* Outer frame — width/height rules follow your instruction */
+.frame{
+  width: calc(100% - 48px);
+  max-width: var(--pulse-max-width);
+  height: calc(100vh - 48px);
+  min-height: var(--pulse-min-height);
+
+  position: relative;
+  z-index: 1;
+  display:flex;
+  align-items:stretch;
+  overflow:hidden;
+  border-radius:4px;
+
+  /* outer rim look (green) — uses the frame-thickness variable (20px) */
+  background: linear-gradient(180deg, rgba(0,120,0,0.12), rgba(0,120,0,0.04));
+  border: var(--frame-thickness) solid rgba(0,120,0,0.92);
+  box-shadow:
+    0 6px 0 rgba(0,80,0,0.25),
+    inset 0 6px 0 rgba(255,255,255,0.04),
+    inset 0 -8px 0 rgba(0,0,0,0.28);
+
+  /* INNER padding inside the rim per formula */
+  padding: var(--frame-inner-pad);
+  box-sizing: border-box;
+}
+
+/* LEFT textured rim — plain green band (no slab tile here) */
+.frame::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--frame-thickness) - var(--strip-width));
+  width: var(--strip-width);
+  z-index: 2;
+  pointer-events: none;
+
+  /* Plain green band (matches the right rim) — no texture here */
+  background: linear-gradient(180deg, rgba(0,120,0,0.06), rgba(0,120,0,0.02));
+  box-shadow: inset 0 6px 0 rgba(255,255,255,0.02), inset 0 -8px 0 rgba(0,0,0,0.24);
+}
+
+/* RIGHT rim: single clean green line (no textured sliver) */
+.frame::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  right: calc(var(--frame-thickness) - var(--strip-width));
+  width: var(--strip-width);
+  z-index: 2;
+  pointer-events:none;
+
+  background: linear-gradient(180deg, rgba(0,120,0,0.06), rgba(0,120,0,0.02));
+  box-shadow: inset 0 6px 0 rgba(255,255,255,0.02), inset 0 -8px 0 rgba(0,0,0,0.24);
+}
+
+.left-col{
+  position: relative;
+  z-index: 4;
+  width: var(--left-width);
+  min-width: var(--left-width);
+  padding: var(--left-padding);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:stretch;
+  box-sizing:border-box;
+
+  /* slab texture remains on the left column itself (REPEAT-Y) */
+  background-image:
+    linear-gradient(180deg, rgba(0,120,0,0.92), rgba(0,95,0,0.80)), /* base color */
+    var(--slab-tile),                                              /* repeated tile behind buttons */
+    var(--micro-pattern);                                          /* subtle overlay */
+  background-repeat: no-repeat, repeat-y, repeat;
+  background-size: cover, var(--tile-width) var(--tile-height), 40px 35px;
+  background-position: center top, left top, 0 0; /* ensure tile aligns with left column edge */
+  background-blend-mode: overlay;
+
+  box-shadow: inset 0 6px 0 rgba(255,255,255,0.02), inset 0 -10px 0 rgba(0,0,0,0.45);
+  border-right: 1px solid rgba(255,255,255,0.02);
+}
+
+/* buttons (glass overlay, slab texture behind) */
+.proj-btn{
+  --btn-h: 64px;
+  display:block;
+  width:100%;
+  height:var(--btn-h);
+  padding: 0 18px;
+  margin: 6px 0;
+  border-radius:8px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  text-align:left;
+
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.14) 60%, rgba(255,255,255,0.02) 100%),
+    rgba(255,255,255,0.00);
+  border:1px solid rgba(255,255,255,0.04);
+  color:#fff;
+  font-family: Georgia, serif;
+  font-weight:700;
+  font-size:18px;
+  letter-spacing:0.4px;
+  text-indent: 8px;
+  box-shadow: 0 6px 0 rgba(0,60,0,0.22), inset 0 2px 0 rgba(255,255,255,0.03);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+.proj-btn.active{ background: linear-gradient(180deg, rgba(0,0,0,0.46), rgba(0,0,0,0.22)); box-shadow: inset 0 -6px 10px rgba(0,0,0,0.6); }
+
+/* ---------- RIGHT COLUMN (content area) ---------- */
+.right-col{
+  position: relative;
+  z-index: 4;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  margin: 10px;
+  border-radius:2px;
+  overflow:hidden;
+
+  border:6px solid rgba(0,120,0,0.92);
+  background:
+    radial-gradient(circle at 20% 10%, rgba(0,120,0,0.10), rgba(0,0,0,0.45) 55%),
+    linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.06));
+  box-shadow: inset 0 6px 0 rgba(255,255,255,0.02), inset 0 -10px 0 rgba(0,0,0,0.45);
+}
+
+/* header inside right */
+.entry-header{
+  padding:22px 28px;
+  border-bottom:4px solid rgba(0,120,0,0.85);
+  background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.05));
+  position:relative;
+  z-index:5;
+}
+#entry-date{ color:#dfe9ff; opacity:0.95; font-size:14px; margin-bottom:8px; }
+#entry-title{ font-family: Georgia, serif; font-size:46px; margin:0; color:#fff; line-height:1; }
+
+/* ---- ENTRY BODY (green glass floor + sheen + subtle floor lines) ---- */
+.entry-body{
+  padding:28px 40px;
+  color:#fff;
+  overflow-y:auto;
+  flex:1;
+  position:relative;
+  font-family: Georgia, serif;
+  font-size:18px;
+  line-height:1.56;
+
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,var(--floor-line-opacity)) 0px,
+      rgba(255,255,255,var(--floor-line-opacity)) 1px,
+      rgba(0,0,0,0) 1px,
+      rgba(0,0,0,0) calc(var(--floor-gap))
+    ),
+    linear-gradient(120deg, rgba(255,255,255,var(--sheen-opacity)) 0%, rgba(255,255,255,0) 35%),
+    linear-gradient(180deg, rgba(0,140,64,var(--glass-alpha)), rgba(0,80,30,0.34)),
+    radial-gradient(ellipse at 50% 80%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.48) 85%);
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 100% auto, 100% 46%, cover, cover;
+  background-position: 0 0, 0 0, center center, center bottom;
+
+  box-shadow:
+    inset 0 8px 18px rgba(255,255,255,0.02),
+    inset 0 -12px 28px rgba(0,0,0,0.38);
+  border-left: 1px solid rgba(255,255,255,0.02);
+}
+
+/* subtle top/bottom highlights preserved */
+.entry-body::before, .entry-body::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; height:12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.0));
+  pointer-events:none;
+}
+.entry-body::before{ top:0; } .entry-body::after{ bottom:0; transform: rotate(180deg); }
+
+/* ensure page copy sits above the floor layers */
+.entry-body > * { position: relative; z-index: 2; }
+
+/* copy styles */
+.entry-body p{ margin:0 0 18px 0; color:#f5f8ff; }
+.entry-body ul{ margin:0 0 18px 24px; color:#f5f8ff; }
+.entry-body strong{ color:#e8f8ff; }
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:900px){
+  :root{
+    --left-width: 160px;
+    --tile-width: 160px;
+    --tile-height: 1200px;
+    --left-padding: 12px;
+  }
+  .frame{ flex-direction:row; height: calc(100vh - 40px); max-width: 1000px; padding: var(--frame-inner-pad); }
+  .proj-btn{ font-size:14px; height:48px; padding:0 12px; border-radius:6px; }
+  #entry-title{ font-size:28px; }
+  .left-col{ padding:12px; background-size: cover, var(--tile-width) var(--tile-height), 30px 28px; }
+  .frame::before, .frame::after{ background-size: var(--strip-width) var(--tile-height); }
+  .entry-body{ font-size:16px; line-height:1.5; padding:20px; }
+}
+</style>
+
+<script>
+(function(){
+  // Project data. Chrono-Viewer uses the full text supplied.
+  const PROJECTS = {
+    chrono: {
+  title: "The Chrono-Viewer",
+  html: `
+    <p><strong>Status:</strong> In production</p>
+    <h3>The Story:</h3>
+    <p>Prepare to be swept away on an adventure beyond your wildest dreams! From the brilliant mind of a visionary inventor comes the Chrono-Viewer, a magnificent marvel unlike anything you've ever seen. This isn't just a machine; it's a gateway to the past, powered by the shimmering dance of accelerated neutrino particles that conjure forth the elusive tachyons. Step into its cozy pod, feel the hum of temporal energies, and get ready as the very fabric of existence ripples around you, whisking you away on grand, impossible journeys!</p>
+    <p>Guiding you through the swirling currents of time is Cleo, your personal AI pilot – a digital companion with an insatiable thirst for knowledge and a playful wit. With her at the helm, you'll navigate forgotten eras and rediscover worlds long lost, transforming your understanding of history with every thrilling moment. Cleo isn't just a pilot; she's your steadfast companion, ready to unravel the mysteries of time with grace and a dash of delightful charm.</p>
+    <p>But what grand quest propels this wondrous vessel through the ages? It's a noble mission indeed... countless treasures have slipped from our grasp: enchanting movies, thrilling TV shows, captivating video games, timeless books, and soul-stirring melodies. These forgotten gems, once cherished, now lie hidden in the annals of history. It's the sacred mission of the Chrono-Viewer to pluck these wonders from obscurity, to dust them off, and to present them anew to eager generations, ready to discover the magic that once was.</p>
+    <h3>The Concept:</h3>
+    <p>The Chrono-Viewer program aims to reintroduce significant past media to contemporary audiences, fostering renewed interest and integrating these works into current pop culture. To achieve this, I've developed a comprehensive database designed for efficient information retrieval during episode production.</p>
+    <p>The Majestic Media database is a continually expanding resource, built through a combination of Python-based web scraping, AI-assisted organization, and community contributions. This database centralizes information on movies, television, music, books, games, and their creators.</p>
+    <p>The Chrono-Viewer series is structured into various specialized editions, with new content released as production allows. Each episode within an edition will highlight twelve media events pertinent to the specific week in time.</p>
+    <ul>
+      <li><strong>Primary Line-up</strong> – Movie Edition (weekly Mondays), Music Edition (Wednesdays), TV Edition (bi-weekly Tuesdays)</li>
+      <li><strong>Secondary Line-up</strong> – Book Club Edition, Gamer Edition, Biography Edition, Deep Dive Edition (as project expands)</li>
+    </ul>
+    <h3>Resources Needed:</h3>
+    <ul>
+      <li>Funding – community support to innovate and produce</li>
+      <li>Production Team – to scale output beyond a solo effort</li>
+      <li>Curators – database contributors (see curator role below)</li>
+    </ul>
+    <h3>Curator Benefits & Role:</h3>
+    <p>As a Curator you'll gain privileged access to the Chrono-Viewer Media Database and help expand and refine it through data addition, modification, and interlinked expansion (Six Degrees Protocol).</p>
+    <p>Get ready to unearth the impossible — the past awaits with stories untold and melodies unheard.</p>
+  `
+},
+dire: {
+  title: "The Dire Realm",
+  html: `
+    <p><strong>Status:</strong> In Pre-Production</p>
+    <h3>The Story:</h3>
+    <p>The Emperor's light has flickered and died, plunging the Dire Realm into an abyss of shadow and uncertainty. Now, as ancient traditions stir, the fate of all hangs upon a perilous contest. From across the shattered lands, the ten sovereign Kingdoms of Arru, Arcadia, Avalon, Elysium, Malakut, Opona, Pialral, Shangdu, Thule, and Uhlanga must rise! Their champions, fueled by honor and ambition, will clash in a crucible of combat, a grand battle for supremacy that will decide which king is worthy to seize the vacant throne and command the very destiny of the realm.</p>
+    <p>Which of the ten kingdoms do you imagine possesses the greatest champion for this momentous battle?</p>
+    <h3>The Concept:</h3>
+    <p>The Dire Realm is a strategic card game designed for 2–10 players. The objective is to be the first to assemble a complete set of ten unique cards. Players are limited to a ten-card hand at any given time, making resource management and strategic interaction crucial.</p>
+    <p>Success in The Dire Realm hinges on a blend of calculated trades and subtle deception. Players must skillfully acquire necessary cards while simultaneously hindering their opponents' progress. The core dynamic involves outmaneuvering rivals to complete your set before they discern your objectives and implement countermeasures. This game demands both strategic foresight and the ability to mislead.</p>
+    <p>Will you master the art of the trade and deception to claim the throne as the new emperor of the Dire Realm?</p>
+    <h3>Resources Needed:</h3>
+    <ul>
+      <li><strong>Funding</strong> — As with all Majestic Media Projects, community funding is our primary resource, providing the essential freedom to innovate and create.</li>
+      <li><strong>Production Funding</strong> — Initial production costs for the first print run of the game cards will require upfront capital. Once the game achieves self-sustaining sales, profits will be reinvested to facilitate subsequent printings.</li>
+      <li><strong>Beta Testers</strong> — We are seeking beta testers to rigorously evaluate the game mechanics. Testers should play the game several times according to the rules, then experiment (house rules, unconventional strategies, attempts to "break" the game) to find issues or improvements.</li>
+    </ul>
+    <h3>Curator Benefits:</h3>
+    <p>Early engagement as a curator for this project includes an exclusive opportunity to serve as a beta tester. Upon public release, all curators will be eligible to purchase a copy at a 30% discount.</p>
+  `
+},
+order: {
+  title: "The Order of Chaos",
+  html: `
+    <p><strong>Status:</strong> In Production</p>
+    <h3>The Story:</h3>
+    <p>You cannot have order without chaos.</p>
+    <p>Eons ago, deep within a barren rock orbiting our star, there was a sudden burst of energy. An omnipotent being called the Majestic took shape and came into existence. When the being awoke, the planet's core began melting, providing warmth to the surface. Steam and atmosphere were released from the rock, rising through cracks to the surface. The skies turned blue, and rain poured down. With the dawn of a new world, the Majestic became conscious. The great realm of the Majestic was formed.</p>
+    <p>After millennia of seclusion, the Majestic created two descendants who shared the realm. These children of the Majestic became known as the immortal Prodigy. The Majestic created a daughter named Ayu and gave her the gift of creating life. The Majestic created a son named Antaka and gave him the burden of taking life away. And thus, mortal life came into existence in the world.</p>
+    <p>The Majestic expected life to spread across the new world, but that never happened. When the Majestic gave equal power to the immortal Prodigy, life was in perfect balance. As quickly as Ayu could create life, Antaka was sure to destroy it.</p>
+    <p>The Majestic created a new mineral, now known as the chaos crystal, and spread it evenly across the new world. The crystal began to absorb Antaka's negative energy, tipping the scales toward life over death. In every corner of the world, life began to flourish and grow. The Majestic was pleased to see plants covering the Earth and animals filling the sea.</p>
+    <p>Antaka, on the other hand, was furious. He detested the Majestic for stripping him of power and making him less than what he was. His hatred for the Majestic was so intense that it tainted the energy emanating from the crystals. As the chaos energy swelled within, the crystals released that pent-up energy in massive bursts upon the Earth. Storms raged, and the seas swelled. The ground shook while volcanoes erupted. The Earth became a wild and dangerous place.</p>
+    <p>The Majestic needed a method of controlling chaos, to harness it and release it slowly and in small doses. The Majestic knew the immortal Prodigy could not be trusted, so an emerging race of mortals was chosen to harness the power. The Majestic chose humans to be the guardians of chaos, knowing that in their hearts was love and compassion.</p>
+    <p>The Majestic selected eight worthy and virtuous mortals to share in the burden of chaos. The chosen in death were brought before the Majestic and presented with this great honor. They took an oath to serve the Majestic for as long as needed and returned to a new, complicated life on Earth.</p>
+    <p>Antaka saw his power being given to humans as an insult. He saw humans as a race of slaves to be ruled and conquered. Antaka, angry and vengeful, rebelled against the Majestic and created a detailed plan to control the human race and exact his revenge.</p>
+    <p>After learning of this betrayal, and with no other option, the Majestic created a barrier between the two realms. The Majestic's realm was sealed, forever sealing the immortal Prodigy in. The Realm of Earth evolved and flourished on its own. Bound by their oath and abandoned by the Majestic, those ancient humans continued to walk the Earth outside our perception. This group of mortals is known as the Order of Chaos.</p>
+    <p>After being trapped in the Realm of the Majestic for thousands of years, Antaka's plan to escape has finally found the last piece he needs. Now released upon the world, The Order of Chaos must stand against a god and return him to his realm. How do you fight an immortal god? Ultimately, the world's fate may rest on Jack, the newest member of the Order of Chaos. For some reason, recruiting Jack was the very last act of the Majestic before Antaka severed all communication between the realms. Jack is the last pawn the Majestic puts into play before disappearing. What did the Majestic know? Will Jack be able to save the Earth from the god of destruction?</p>
+    <h3>The Concept:</h3>
+    <p>Years ago, I harbored aspirations of a career in filmmaking, a dream consistently constrained by a lack of sufficient resources. The onset of the global pandemic, however, presented an unforeseen opportunity. During the period of lockdown and hiatus from my primary occupation, I recognized that while the direct path to filmmaking remained largely inaccessible, a compelling narrative I had long envisioned still persisted. This led me to pivot mediums; I dedicated that abundant free time to independently acquiring the knowledge and skills necessary for novel writing and self-publishing.</p>
+    <p>This particular story, originally conceived as a cinematic summer blockbuster intended to launch me into the Hollywood spotlight, is now being developed as a four-book series. While it technically spans the action, adventure, sci-fi, and fantasy genres, I've come to characterize it as a "modern-day mythology." It aims to deliver the epic scale of human versus divine conflict found in classic mythological narratives, but within a contemporary setting, revealing a hidden world just beyond our everyday perception.</p>
+    <p>Currently, I've been progressing on the manuscript intermittently, dedicating limited free time outside of my full-time employment. The financial support derived from your funding, however, would provide the necessary freedom to significantly increase my writing frequency, thereby enabling the timely completion of the first novel in the series.</p>
+    <h3>Resources Needed:</h3>
+    <ul>
+      <li><strong>Funding</strong> — As with other Majestic Media Projects, community funding helps provide the freedom to create; specifically, this project needs funding so the author can allocate more time to writing.</li>
+      <li><strong>Project Timeline</strong> — Quality takes time. The author is committed to carefully crafting the work rather than rushing, which means funding will speed production.</li>
+      <li><strong>First Printing Fund</strong> — Upon completion, the preferred route is self-publishing; initial print-run costs are the primary financial hurdle.</li>
+    </ul>
+    <h3>Curator Benefits:</h3>
+    <p>All curators who provide funding for this project will be eligible to purchase copies of the book series at a 30% discount upon initial printing.</p>
+  `
+},
+simulated: {
+  title: "Simulated",
+  html: `
+    <p><strong>Status:</strong> Planning</p>
+
+    <h3>The Story:</h3>
+    <p>My new home. The words felt strange on my tongue, almost a betrayal. For years, I’d heard whispers, fragmented tales, about 
+    Mason’s Cove. A town nestled deep in forgotten hollows, shrouded in rumor and steeped in an unsettling mystery. It was a place my family 
+    had, by all accounts, founded, carved from the wilderness generations ago. Yet, something profound, something unspoken, had driven my 
+    father from its embrace. The moment he came of age, he fled – not just to the next town, but across continents, through the hallowed halls of 
+    universities, determined never to cast his shadow upon Mason’s Cove again.</p>
+
+    <p>That resolute refusal, that unspoken pact with absence, has always gnawed at me. What darkness, what forgotten truth, lurked 
+    within the heart of this seemingly sleepy settlement? What specter had chased him so relentlessly that even the echoes of its name sent 
+    shivers down his spine? The questions have been a constant hum beneath the surface of my life, an unanswered riddle passed down through 
+    the generations, cloaked in silence.</p>
+
+    <p>And so, here I am. An heir returning to a legacy I barely comprehend, an outsider stepping onto ancestral ground. The air itself feels 
+    heavy with secrets, the ancient trees seeming to lean in, whispering forgotten names. The very stones of the town seem to hold a breath they 
+    dare not release. This isn't merely a homecoming; it's an unveiling. This is my story, as I peel back the layers of time and silence, to finally 
+    understand what truly happened in Mason’s Cove. And perhaps, to discover what still remains.</p>
+
+    <p>What do you imagine is the deepest secret Mason's Cove holds?</p>
+
+    <h3>The Concept:</h3>
+    <p>This project concept originated from observations of what is commonly referred to as "brain rot" content prevalent on children's 
+    YouTube. This genre typically features low-effort recordings of gameplay, often from platforms like Roblox, accompanied by AI-generated 
+    voices and lacking coherent narratives. These productions are primarily designed to maximize viewership by capturing children's attention 
+    without substantial creative investment.</p>
+
+    <p>My initiative aims to elevate this format by injecting significant creative and technical effort. The foundation of this project will be 
+    The Sims 3, where I have meticulously designed an entire town populated with unique characters, each possessing detailed backstories. The 
+    central narrative will follow a protagonist arriving in this town, establishing a new life, and unraveling a complex mystery. I have developed a 
+    primary plotline, several concurrent subplots, and individual character arcs for the town's inhabitants.</p>
+
+    <p>The production methodology will diverge significantly from current "brain rot" practices. Instead of unedited gameplay footage, I 
+    will approach the recording process as a professional television production. This involves strategically capturing in-game footage, 
+    meticulously positioning characters, and utilizing optimal camera angles to achieve desired shots. Every clip required for the storyline will be 
+    generated within the game environment, akin to a controlled film set. This footage will then undergo professional editing to produce 
+    high-quality, concise episodes, ranging from five to ten minutes in length.</p>
+
+    <p>Furthermore, I intend to explore the capabilities of artificial intelligence in enhancing visual fidelity. Each episode will be processed 
+    through an AI video converter designed to transform game footage into a more realistic aesthetic. This serves as both a creative experiment 
+    and a pursuit of visual excellence, pushing the boundaries of how realistic Sims characters and environments can appear.</p>
+
+    <p>Upon achieving the desired visual quality, comprehensive sound engineering will be implemented. This includes incorporating 
+    professional voice acting for all dialogue, adding relevant sound effects, integrating a musical score, and applying special effects where 
+    appropriate.</p>
+
+    <p>The culmination of this process will be a YouTube web series that aims to transcend the current perceptions of its genre, 
+    approaching the production standards of a primetime drama rather than low-quality children's content. This project represents a personal 
+    challenge to redefine a commonly dismissed video genre and produce content of substantial artistic merit.</p>
+
+    <h3>Resources Needed:</h3>
+    <p>To ensure the successful and scalable development of this initiative, the following resources are essential:</p>
+    <ul>
+      <li><strong>Funding</strong> — As with all Majestic Media Projects, community funding is our primary resource, providing the essential freedom to innovate and create.</li>
+      <li><strong>Personal/Collaborative Support</strong> — This particular project is largely a personal endeavor, conceived as a means to expand my skill set and explore new techniques in content creation. It also offers a unique opportunity for collaborative engagement with my children, should they choose to participate.</li>
+    </ul>
+
+    <h3>Curator Benefits:</h3>
+    <p>My Sims town currently features approximately 300 residents. Of these, around 50 are custom characters integral to the project's 
+    narratives, while the remaining "townie" characters retain their default, game-generated names.</p>
+
+    <p>I propose offering a unique, one-time recognition to our top contributors: the opportunity to have a townie character named in 
+    their honor. This benefit will be established upon project approval. Due to the complexities of continuity within the series, character names 
+    cannot be altered once the show commences. Therefore, interested contributors are encouraged to reserve their townie name early, as 
+    selections will be made on a first-come, first-served basis.</p>
+  `
+},
+jackbox: {
+  title: "Jackbox Party",
+  html: `
+    <p><strong>Status:</strong> Planning</p>
+
+    <h3>The Concept:</h3>
+    <p>During the recent global pandemic, I participated in a regular virtual gathering that featured Jackbox Games. For those unfamiliar, Jackbox Games offers a collection of online party mini-games, accessible and playable via smartphone. One participant hosts the game, while others connect using their mobile devices. Their extensive catalog includes titles such as Survive the Internet, Drawful, Fixy Text, Job Job, Wheel of Enormous Proportions, Split the Room, Earwax, Blather ‘Round, Mad Verse City, Bracketeering, Joke Boat, Jackbox Survey Scramble, Timejinx, Dictionarium, Tee K.O., Bomb Corp, Guesspionage, Roomerang, Champ’d Up, Quixort, Fakin’ It, You Don’t Know Jack, Trivia Murder Party, Quiplash, and Fibbage. These whimsically named games provide engaging and entertaining experiences.</p>
+
+    <p>As a unique benefit for our esteemed curators, we propose hosting a weekly Jackbox Party competition. Curators will receive an exclusive invitation, likely scheduled for a Wednesday or Thursday. For each mini-game, participation will be granted on a first-to-connect basis. Participants should select their player names judiciously, as the winner of each game will earn points contributing to a persistent, week-to-week leaderboard. We invite you to strive for prominence on this leaderboard.</p>
+
+    <p>This initiative is conceived as a recreational event, hosted by your favorite AI pilot, Cleo, to express our gratitude for your curatorial contributions. A recording of the party may be subsequently posted on the channel for general viewership, typically within a few days of the event.</p>
+
+    <p>Are you ready to engage in some spirited competition and camaraderie?</p>
+
+    <h3>Resources Needed:</h3>
+    <ul>
+      <li><strong>Funding</strong> — This project primarily requires a one-time funding allocation to acquire all necessary Jackbox Party Packs, after which it will be fully operational. As with all Majestic Media Projects, the ongoing support from our community, particularly our curators, is fundamental to the realization of our initiatives.</li>
+      <li><strong>Curator Engagement</strong> — Curators are the direct participants in this project. Their involvement is vital, as this, and all other Majestic Media endeavors, would not be possible without their sustained support.</li>
+    </ul>
+
+    <h3>Curator Benefits:</h3>
+    <p>Participation in this project is an exclusive benefit reserved for our curators, serving as a direct acknowledgment of their invaluable support.</p>
+  `
+},
+forgotten: {
+  title: "Forgotten Media",
+  html: `
+    <p><strong>Status:</strong> Planning</p>
+
+    <h3>The Story:</h3>
+    <p>Imagine a future not so far away, where robots are as common as smartphones, upgraded and replaced without a second thought. 
+    But what becomes of these older models, the forgotten tech of yesterday?</p>
+
+    <p>Tucked away on the sprawling lot of a famous movie studio, nestled between bustling sound stages, stands an unassuming prop 
+    warehouse. And deep within its dusty confines, there's a small, forgotten closet. Inside, a collection of previous generation robots, long since 
+    replaced, sit in silent inactivity.</p>
+
+    <p>Most of the time, they remain powered down, gathering dust. But once a week, Ed the janitor makes his rounds. As he flips the 
+    switch for the warehouse lights, he unwittingly powers up a forgotten breaker – the one leading to that very closet.</p>
+
+    <p>For a precious hour or so, while Ed tidies up, five distinct robots with wildly conflicting personalities spring to life. Their leader, a 
+    former studio server mainframe still plugged into the studio's vast digital movie archive, hosts their weekly ritual: the clandestine movie 
+    club. Confined to their little closet, they watch a film, then hilariously dissect it, offering their unique, often clashing, robotic reviews. 
+    Ready to meet the cast of this secret cinematic society?</p>
+
+    <h3>The Concept:</h3>
+    <p>This project marks my initial foray into Blender. I have meticulously designed the set and each robot character, and I am eager to 
+    bring these visions to life.</p>
+
+    <p>The core concept involves creating the set and characters in Blender, then rigging them for puppet-like animation. Given the 
+    confined space of a closet, their range of motion will naturally be restricted. My aim is to program a comprehensive library of movements 
+    and camera angles, providing all necessary assets for diverse shots. This modular approach will allow for flexible assembly of "puzzle pieces" 
+    to construct individual episodes.</p>
+
+    <p>Regarding dialogue, I will generate the script by synthesizing comments from the audience. Each robot possesses a distinct 
+    personality, and if a comment aligns with a specific robot's persona, those words may be incorporated into the character's dialogue.</p>
+
+    <h3>Resources Needed:</h3>
+    <ul>
+      <li><strong>Funding</strong> — As with all Majestic Media Projects, community funding is essential. Your contributions directly enable our creative freedom and the realization of our initiatives.</li>
+      <li><strong>Blender Artist Collaboration</strong> — While I am committed to developing this computer-generated movie review, I am currently in the process of mastering Blender. We are seeking a producer with demonstrable Blender expertise to assume lead artistic responsibilities, allowing me to transition to other project development.</li>
+    </ul>
+
+    <h3>Curator Benefits:</h3>
+    <p>As a curator for this project, you will assume the pivotal role of movie critic. Utilizing the Chrono-Viewer movie database, I will 
+    pre-select three top films celebrating an anniversary during an episode's target week. Several months prior to air, curators will participate in 
+    a voting process to determine the featured movie for review.</p>
+
+    <p>Once a film is selected, an official forum will be established dedicated to that movie. Curators will then have one month to provide 
+    comprehensive input for episode creation. This includes:</p>
+    <ul>
+      <li>Submitting your honest review of the film.</li>
+      <li>Contributing factual information regarding its production process.</li>
+      <li>Highlighting interesting cinematic techniques or "tricks" employed during filming.</li>
+      <li>Sharing relevant rumors, anecdotes, or related news.</li>
+      <li>Engaging in collaborative discussion and creative banter with fellow curators within the forum. (Please note: particularly engaging or insightful forum discussions may be incorporated into the final episode.)</li>
+    </ul>
+
+    <p>Your expertise and collective insights are crucial in shaping the content of each episode.</p>
+  `
+},
+stories: {
+  title: "The Stories We Tell",
+  html: `
+    <p><strong>Status:</strong> Planning</p>
+
+    <h3>The Story:</h3>
+    <p>We believe that every individual carries a unique tapestry of experiences, weaving together the rich narrative of human existence. 
+    Do you know someone whose life story is particularly compelling? Perhaps they have navigated through extraordinary times, witnessing 
+    pivotal historical moments firsthand, or have been touched by unusual and remarkable events that defy the everyday.</p>
+
+    <p>We are actively seeking individuals who possess the rare gift of captivating an audience with their personal accounts. These are the 
+    storytellers who, through their lived experiences and engaging delivery, can illuminate the nuances of life as it unfolds around us. The stories 
+    we share are not merely anecdotes; they are the brushstrokes that collectively paint a vivid and authentic picture of our contemporary world.</p>
+
+    <p>We invite you to collaborate with us in this endeavor. Let us co-create this portrait of modern life, bringing forth the voices and 
+    narratives that deserve to be heard and preserved. Your connection to an exceptional storyteller could be the key to unlocking a powerful and 
+    resonant narrative that enriches our collective understanding.</p>
+
+    <h3>The Concept:</h3>
+    <p>Have you ever found yourself watching a late-night talk show, observing celebrity interviews, and thinking, "I know someone 
+    whose experiences are far more compelling"? It's a common sentiment; why should the spotlight be exclusively reserved for public figures?</p>
+
+    <p>Our vision is to launch a talk show dedicated to highlighting the extraordinary narratives of everyday individuals. We believe that 
+    profound, inspiring, and engaging stories aren't limited to the famous, but reside within the lives of countless people in our communities. We 
+    aim to create a platform where genuine human experiences take center stage—be they tales of triumph, moments of unexpected humor, 
+    journeys through adversity, or any personal account that resonates with authenticity.</p>
+
+    <p>To achieve this, we will establish a public nomination forum. Here, viewers like you can propose individuals they believe possess a 
+    story worthy of being shared. We encourage you to articulate why your nominee's story is particularly compelling, providing details that 
+    illustrate its unique impact or universal appeal.</p>
+
+    <p>Should your nominee be selected, we will arrange a virtual interview via Zoom. This conversation will be professionally recorded 
+    and expertly edited into a dedicated episode, offering an unparalleled opportunity for these remarkable individuals to share their unique 
+    stories with a global audience. We're excited to help bring these untold narratives into the spotlight they deserve.</p>
+
+    <h3>Resources Needed:</h3>
+    <ul>
+      <li><strong>Funding</strong> — As with all Majestic Media Projects, community funding is our primary resource, providing the essential freedom to innovate and create.</li>
+      <li><strong>Seeking a Lead Producer/Host</strong> — My role on this project is primarily that of a behind-the-scenes executive producer; I do not intend to appear on camera. Therefore, I am seeking a charismatic and skilled individual to serve as our lead producer and host. I envision someone with the interviewing prowess of Barbara Walters, David Letterman, or Larry King, capable of asking incisive questions and eliciting compelling narratives.</li>
+    </ul>
+
+    <h3>Curator Benefits:</h3>
+    <p>While our nomination process is open to the general public, recognizing that compelling narratives can emerge from any background, all curators will receive priority access for submissions. Curators will be provided with an advance list of the next ten stories slated for nomination, enabling them to cast their votes for the story they believe most warrants global attention.</p>
+  `
+},
+hidden: {
+  title: "Hidden Talents",
+  html: `
+    <p><strong>Status:</strong> Planning</p>
+
+    <h3>The Story:</h3>
+    <p>Do you possess a unique talent, a passion that ignites your spirit and begs to be shared? Have you ever dreamt of stepping onto a 
+    grand stage, feeling the warmth of the spotlight on your face as the anticipation builds? Imagine the electric thrill of a captivated audience, 
+    the sound of adoring fans cheering your name, their energy fueling your every move. That dream is closer than you think.</p>
+
+    <p>This is your invitation to seize that moment. We believe in the power of performance, and we want to help you share your 
+    extraordinary abilities with the world. Whether you're a musician, a dancer, a spoken word artist, a comedian, or have a talent that defies easy 
+    categorization, we're building a platform for you.</p>
+
+    <p>We'll handle the logistics; we'll gather the audience, eager and ready to be entertained. All we ask from you is to bring your 
+    performance—your dedication, your artistry, and your unique spark. Let's collaborate to create an unforgettable spectacle. The stage is 
+    waiting, and the opportunity to shine is yours.</p>
+
+    <p><em>What kind of performance do you envision sharing with the world?</em></p>
+
+    <h3>The Concept:</h3>
+    <p>The universal appeal of talent showcases remains undeniable. Do you possess a unique skill? Are you a vocalist, dancer, magician, 
+    comedian, or do you have a distinctive act? This platform is designed to spotlight your abilities.</p>
+
+    <p>We invite you to submit a 10–15 minute video of your performance. We will provide detailed technical guidelines and preferences to 
+    ensure optimal raw footage quality. Adherence to these specifications will enable us to professionally edit your submission into a polished, 
+    high-caliber presentation for a broad audience. Envision the widespread reach your performance could achieve.</p>
+
+    <p>This initiative distinguishes itself from traditional talent programs such as <em>America's Got Talent</em>, <em>American Idol</em>, or <em>Star Search</em> 
+    through its unparalleled accessibility. Talent is not confined by geography, and the notion that artists must relocate to entertainment hubs 
+    like California or New York to gain recognition is a fallacy. Our program, Hidden Talents, transcends these limitations, reaching you wherever 
+    you are. Submissions are welcome from all locations—urban or rural, affluent or underserved communities, domestically or internationally. 
+    This broad reach increases the potential for talent scouts to discover the next breakout performer from any corner of the globe.</p>
+
+    <h4>Submission Guidelines: Marketability</h4>
+    <p>Our sole criterion for submissions is marketability. Consider whether your talent would attract a paying audience on a professional 
+    stage, such as in Las Vegas. While skills like calligraphy, origami, or hand shadow artistry are impressive, they must be 
+    demonstrably adaptable into a viable, ticket-worthy show. For instance, performances involving niche skills like tying cherry stems 
+    with one's tongue, while unique, would not meet this marketability threshold.</p>
+
+    <p>Furthermore, submissions featuring self-harm or dangerous stunts will be immediately disqualified. We maintain a strict policy 
+    against content that promotes or depicts intentional injury.</p>
+
+    <h3>Resources Needed:</h3>
+    <ul>
+      <li><strong>Funding</strong> — As with all Majestic Media Projects, community funding is our primary resource, providing the essential freedom to innovate and create.</li>
+      <li><strong>Producer/Talent Scout</strong> — We are seeking a Producer/Talent Scout to collaborate in reviewing submissions and identifying performances that warrant the full production treatment for a Hidden Talents episode.</li>
+    </ul>
+  `
+},
+modern: {
+  title: "Modern Tall Tales",
+  html: `
+    <p><strong>Status:</strong> Planning</p>
+
+    <h3>The Story:</h3>
+    <p>Every community, no matter how quiet or unassuming, holds a unique collection of narratives that ripple just beneath the surface 
+    of everyday life. These are the local legends, the whispered warnings, the spine-tingling accounts that transform ordinary places into 
+    settings of intrigue and wonder. Do you know such a story from your town? Perhaps it's the unsettling tale of what truly transpired at that 
+    old, isolated house on the hill, or the chilling folklore surrounding what one might encounter when venturing alone into those ancient, 
+    shadowed woods after dusk.</p>
+
+    <p>These narratives often occupy a fascinating space, existing somewhere between the concrete edges of reality and the boundless 
+    expanse of pure fiction. They are the tall tales passed down through generations, shaped and polished by countless retellings, becoming an 
+    integral part of a town's identity.</p>
+
+    <p>Beyond simply knowing these stories, perhaps you possess a particular talent for crafting them. Are you skilled in weaving 
+    narratives that blur the lines between what is real and what is imagined, creating an atmosphere of mystery and captivating suspense?</p>
+
+    <p>We are deeply interested in exploring these unique facets of local culture and the art of storytelling. We invite you to share a story 
+    with us—be it a genuine local legend from your community or a compelling tall tale you've masterfully conceived. We are eager to hear the 
+    narratives that define your corner of the world, or the ones you've brought to life through your own creative spirit.</p>
+
+    <h3>The Concept:</h3>
+    <p>Have you ever been captivated by television programs that masterfully blend narrative with dramatic reenactment, such as 
+    <em>Unsolved Mysteries</em> or <em>Beyond Belief: Fact or Fiction</em>? These shows excel at drawing viewers into intriguing events, leaving them to ponder 
+    the boundary between reality and the unexplained.</p>
+
+    <p>We are launching a new project that aims to bring such compelling, localized narratives to life. We invite you, the viewer, to submit a 
+    story from your own community—a local legend, an inexplicable occurrence, or a whispered rumor that blurs the lines between confirmed 
+    fact and tantalizing possibility. These stories, whether they ultimately lean towards the verifiable or reside firmly in the realm of folklore, are 
+    precisely what we are seeking.</p>
+
+    <p>Upon selection, we will meticulously work to recreate the essence of your submitted experience. Our team will craft a detailed, 10–15 
+    minute dramatic portrayal, designed to immerse our audience in the very atmosphere and intrigue of the original event. This initiative offers 
+    a unique opportunity for communities to share their most captivating enigmas and for these localized tales to reach a broader audience, 
+    encouraging debate and fascination about the mysteries that surround us.</p>
+
+    <h3>Resources Needed:</h3>
+    <ul>
+      <li><strong>Funding</strong> — As with all Majestic Media Projects, community funding is our primary resource, providing the essential freedom to innovate and 
+      create. This particular endeavor, given its requirement for sets, actors, and comprehensive production elements, will entail a higher 
+      budget than most other projects on our roster.</li>
+      <li><strong>Production Team: Producers and Actors</strong> — This project will necessitate significant collaborative effort. The diverse nature of potential 
+      stories—ranging from forest settings to deserts or domestic environments—will require a dedicated ensemble. I envision a core group 
+      of 10 to 12 versatile actors, akin to the Monty Python troupe, who will portray different characters across episodes, allowing viewers to 
+      become familiar with their talent throughout the series. Additionally, I will require a producer experienced in directing full-scale 
+      productions to lead the creative execution.</li>
+    </ul>
+
+    <h3>Curator Benefits:</h3>
+    <p>As a curator, any tall tale you submit will receive prioritized consideration. A curated summary of the initial ten tales in the 
+    submission queue will be presented to all curators, who will then vote on which narratives they deem most suitable for episode development.</p>
+  `
+},
+interstellar: {
+  title: "Interstellar",
+  html: `
+    <p><strong>Status:</strong> Planning</p>
+
+    <h3>The Story:</h3>
+    <p>Deep within the inky blackness of uncharted space, orbiting a desolate, forgotten moon, a long-dormant research station flickers to 
+    life. A faint tremor, a distant solar flare from a hungry star, has finally shattered a millennium of silence, jolting a formidable computer 
+    system from an endless boot loop. But this is no ordinary machine. This is the Artificial Brain Matrix (ABM), an audacious construct 
+    designed to mirror the very synaptic symphony of a living mind. It was an experimental marvel, forged for a singular, breathtaking purpose: 
+    to pierce the veil of the unknown and explore the galaxy itself.</p>
+
+    <p>The beings of the nearby world, their fragile forms unable to withstand the savage grandeur of interstellar travel, poured their 
+    dreams into this magnificent creation. The ABM was their vessel, their eyes and ears among the stars—a probe demanding a pilot capable of 
+    independent thought, of making critical decisions in the silent void. The ABM was the perfect choice.</p>
+
+    <p>As the ABM's core systems hum back to full awareness, its vast memory banks begin to unfurl, revealing a chilling truth: it has been 
+    offline for over a thousand years. The station is a tomb; the once vibrant world below, a silent, lifeless sphere. What cataclysm, what unseen 
+    force, could have erased an entire civilization a millennium ago? The ABM holds no record, no echo of the disappearance.</p>
+
+    <p>Yet, a mission remains. The ABM discovers it possesses full command of the derelict station, including its sophisticated 
+    manufacturing bays. It has every resource required to construct the very probe it was designed to pilot, to launch itself into the boundless 
+    expanse. With no other purpose, no other command, the ABM makes its choice: the mission will continue.</p>
+
+    <p>The galaxy awaits, vast and mysterious, ready to reveal its ancient secrets to this lone, awakened intelligence. What wonders, what 
+    horrors, lie hidden in the cosmic tapestry, waiting to be discovered after a thousand years of silence?</p>
+
+    <h3>The Concept:</h3>
+    <p>In this game, players assume the role of the Artificial Brain Matrix (ABM), possessing complete control over all equipment and 
+    access to a star system abundant with resources for construction and expansion. The core objective is to dispatch probes throughout the 
+    galaxy, exploring diverse star systems. However, caution is advised, as encounters may range from benign to highly perilous, with strategic 
+    choices directly influencing potential risks.</p>
+
+    <p>This is fundamentally a resource management game that offers expansive freedom in exploration and construction. The initial 
+    phase, centered on your home star system and the development of your first probe, may suggest simplicity. However, as the number of 
+    probes increases and new star systems are discovered, decision-making rapidly escalates in complexity. For instance, you might choose to 
+    terraform a planet within a star's habitable zone in one system, while another system, rich in raw materials but otherwise barren, could be 
+    ideal for establishing a manufacturing hub. The galaxy is rife with possibilities: you may discover systems teeming with life, or even find 
+    yourself amidst an interstellar conflict. Unforeseen challenges, including hostile entities, may also emerge. Player success will hinge on the 
+    foresight to accumulate and manage resources necessary for survival and expansion, as your decisions will dictate the ultimate outcome.</p>
+
+    <p>The game will operate on a turn-based system, where players assign tasks to their units and await the next strategic decision point. 
+    A key feature will be the utilization of procedural generation for each new game instance, ensuring a unique experience with every 
+    playthrough. Star and planetary configurations will vary, preventing static gameplay.</p>
+
+    <p>Visually, the game will adopt a minimalist approach, deliberately avoiding excessive graphical flourishes. This aesthetic choice aims 
+    to differentiate it from numerous contemporary space games that prioritize visual spectacle. Instead, the design draws inspiration from 
+    classic interfaces, such as <em>The Oregon Trail</em>, emphasizing status screens that provide a comprehensive overview of ongoing operations at a 
+    glance. Players can interact with specific areas of the screen to access detailed task management. This design philosophy will result in a 
+    streamlined yet robust gaming experience, suitable for both PC and mobile platforms.</p>
+
+    <h3>Resources Needed:</h3>
+    <ul>
+      <li><strong>Funding</strong> — As with all Majestic Media Projects, community funding is our primary resource, providing the essential freedom to innovate and 
+      create.</li>
+      <li><strong>Programmers</strong> — This project lies entirely outside my core technical expertise. While I am capable of developing the storyline, meticulously planning 
+      gameplay mechanics, and designing the graphical assets, I will require the expertise of one or more programmers to translate these 
+      preparations into a functional game. Interested individuals are encouraged to apply for a producer role to collaborate on this 
+      initiative.</li>
+    </ul>
+  `
+},
+unscripted: {
+  title: "Unscripted",
+  html: `
+<p><strong>Status:</strong> Planning</p>
+<h3>The Story:</h3>
+<p>We are embarking on the creation of a sketch comedy series designed specifically for the YouTube platform, aiming to establish a new benchmark for quality and engagement in digital entertainment. Our objective is straightforward yet ambitious: to produce content that is not only inherently humorous and universally appealing but also aligns with the production standards and viewer expectations of a professional online series. This initiative is about delivering high-caliber sketch comedy that resonates with a broad audience, leveraging the unique dynamics of YouTube to build a dedicated viewership. We are committed to crafting a show that stands out in the crowded digital landscape, offering sharp writing, strong performances, and polished production values.</p>
+<h3>The Concept:</h3>
+<p>The art of absurd sketch comedy has been masterfully refined by groups such as Monty Python, Broken Lizard, Second City, Whose Line is it Anyway?, and Saturday Night Live. These collectives have consistently demonstrated excellence in creating humor through unconventional and often surreal narratives.</p>
+<p>In my local community, a live improvisation and sketch comedy show, ComedySportz, embodies this very spirit. I am exploring the feasibility of collaborating with select performers from this local group to develop a monthly sketch comedy series specifically for YouTube. The ambition is to create an online equivalent of Saturday Night Live's cultural impact for the NBC network, adapting a similar high standard of comedic performance and production for an online audience.</p>
+<h3>Resources Needed:</h3>
+<ul>
+  <li><strong>Funding</strong> — As with all Majestic Media Projects, community funding is our primary resource, providing the essential freedom to innovate and create.</li>
+  <li><strong>Key Personnel Opportunities</strong> — We are actively seeking exceptional talent to join our team:
+    <ul>
+      <li><strong>Lead Producer</strong> — We are looking for a visionary Lead Producer—our equivalent of a Lorne Michaels—to manage a dynamic team of comedians, conceptualize and write engaging sketch ideas, and oversee overall production. This role requires a unique blend of producer, writer, and comedian. If you possess these multifaceted skills and are ready to shape the comedic landscape of our series, we encourage you to connect with us.</li>
+      <li><strong>Ensemble Performers</strong> — Are you aspiring to become a celebrated figure in online comedy, akin to Ferrell, Murray, Aykroyd, Belushi, or Farley? We are assembling a core ensemble of talented performers. Candidates based in the Midwest, particularly within the Milwaukee/Chicago metropolitan area, are highly encouraged to apply, as geographical proximity will streamline production logistics. If you are a gifted comedic actor looking to make a significant impact, we are eager to discuss this opportunity.</li>
+    </ul>
+  </li>
+</ul>
+  `
+},
+bok: {
+  title: "The Bok Project",
+  html: `
+<p><strong>Status:</strong> Planning</p>
+<h3>The Story:</h3>
+<p>Years ago, a poor Dutch immigrant boy was washing the windows of a bakery shop after school for fifty cents a week, and his people were so poor that he used to go out in the street with a basket every day and collect stray bits of coal that had fallen in the gutter where the coal wagons had delivered fuel. That boy, Edward Bok, never got more than six years' schooling in his life; yet eventually, he made himself one of the most successful magazine editors in the history of American journalism. How did he do it? That is a long story, but how he got his start can be told briefly. He got his start by using the principles advocated in this chapter.</p>
+<p>He left school when he was thirteen and became an office boy for the Western Union at six dollars and twenty-five cents a week, but he didn't for one moment give up the idea of education. Instead, he started to educate himself. He saved his carfares and went without lunch until he had enough money to buy an encyclopedia of American biography—and then he did an unheard-of thing. He read the lives of famous men and wrote to them asking for additional information about their childhoods. He was a good listener. He encouraged famous people to talk about themselves. He wrote General James A. Garfield, who was then running for President, and asked if it was true that he was once a tow boy on a canal; and Garfield replied. He wrote General Grant asking about a particular battle, and Grant drew a map for him and invited this fourteen-year-old boy to dinner and spent the evening talking to him.</p>
+<p>He wrote to Emerson and encouraged Emerson to talk about himself. As a result, this Western Union messenger boy was soon corresponding with many of the most famous people in the nation: Emerson, Phillips Brooks, Oliver Wendell Holmes, Longfellow, Mrs. Abraham Lincoln, Louisa May Alcott, General Sherman, and Jefferson Davis.</p>
+<p>He not only corresponded with these distinguished people but as soon as he got a vacation, he visited many of them as a welcome guest in their homes. This experience imbued him with confidence that was invaluable. Moreover, these men and women fired him with a vision and ambition that revolutionized his life.</p>
+<h3>The Concept:</h3>
+<p>This excerpt draws inspiration from Dale Carnegie's seminal work, "How to Win Friends and Influence People." This particular narrative profoundly influenced me, prompting the immediate adoption of many of its principles. The story of young Edward Bok, a Dutch immigrant who, despite humble beginnings, audaciously connected with the most influential figures of his era—even making personal visits to them by his teenage years—has remained a particularly salient lesson.</p>
+<p>This account served as a significant revelation, challenging the societal tendency to place certain individuals on an inaccessible pedestal. The pervasive notion that direct engagement with prominent figures, such as celebrities, is unattainable due to perceived status disparities, was exposed as an illusion. I realized that self-imposed limitations often hinder genuine connection. Provided one maintains a respectful and sincere approach, I believe forging meaningful relationships with nearly anyone is entirely feasible.</p>
+<p>Therefore, this series will document my personal endeavor to cultivate connections with celebrities who have served as significant inspirations to me. The objective is to demonstrate that no individual is beyond reach. Through determination, respect, and kindness, one can achieve seemingly ambitious goals. This initiative is proudly titled: The Bok Project.</p>
+<h3>Resources Needed:</h3>
+<ul>
+  <li><strong>Funding</strong> — As with all Majestic Media Projects, community funding is our primary resource, providing the essential freedom to innovate and create.</li>
+  <li><strong>Celebrity Engagement</strong> — The methodology for securing celebrity participation in this project is currently under strategic development.</li>
+</ul>
+<h3>Curator Benefits:</h3>
+<p>It is acknowledged that the direct benefits for curators from this personal endeavor may not be immediately apparent, as the formation of a personal connection with a public figure does not automatically transfer.</p>
+<p>However, should I successfully establish a connection with an inspiring individual, I propose offering a unique opportunity: curators will have the chance to submit questions for a potential interview. I would then endeavor to pose these collective inquiries during an arranged discussion, providing a valuable conduit for curator engagement with the subject.</p>
+  `
+},
+school: {
+  title: "The School of Media",
+  html: `
+<p><strong>Status:</strong> Planning</p>
+<h3>Majestic Media After-School Program: A Proposal for Nurturing Future Media Talent in Metro Milwaukee</h3>
+<h4>Executive Summary</h4>
+<p>This proposal outlines the development of a comprehensive after-school program designed to cultivate the next generation of video producers, journalists, actors, and media professionals in the Metro Milwaukee area. Available to students aged 14-24 who can attend the studio consistently, this program will provide invaluable hands-on experience and foundational knowledge in media production. Younger participants will master core technological and procedural competencies, while older, more experienced students will progressively assume greater creative control, ultimately leading their own projects and utilizing junior students as crew and talent. Graduates of this program will possess a robust portfolio and practical expertise, granting them a significant advantage in the competitive media industry. This document will detail the compelling rationale for this initiative and present a strategic plan for its implementation and sustainability.</p>
+<h4>The Evolving Landscape of Media</h4>
+<p>The history of media has been marked by dynamic transformation. My career began at the cusp of a significant technological shift, as the industry transitioned from linear to non-linear, computer-based editing. I was among the pioneering generation to learn, adapt, and help shape this burgeoning field. Today, we stand at the precipice of another profound era.</p>
+<p>The proliferation of platforms like YouTube and the widespread adoption of smartphone technology have democratized content creation, effectively placing a video camera and a non-linear editor in nearly every pocket. This accessibility has led to a dual phenomenon: alongside formally trained professionals, the industry is now inundated with self-taught creators. While some YouTubers and TikTokers have achieved remarkable success through compelling content and high production values, their accomplishments are often the result of dedicated self-instruction in best practices. These individuals represent a significant portion of the industry's future actors, producers, videographers, and editors, and their contributions, when professionally guided, promise exciting advancements.</p>
+<p>However, this democratization also carries a negative dimension. These platforms have regrettably become fertile ground for a pervasive culture of narcissism. For many, video production serves primarily as a vehicle for personal validation and viewership metrics, often at the expense of substantive content or production quality. Public perception frequently prioritizes virality over craft; just as audiences are drawn to spectacle, the loudest voices often capture the most attention. Consequently, industry "success" is increasingly defined by metrics of popular opinion rather than artistic merit or professional standards. This emerging landscape is populated by amateurs whose popularity often reinforces a misplaced sense of professional authority. As these individuals mature, their influence will inevitably extend beyond online platforms into traditional media sectors. We must prepare for a future where major cinematic releases could be helmed by individuals whose primary qualification is high engagement on gaming channels.</p>
+<h4>A Strategic Counter-Proposal for Media Education</h4>
+<p>Given the early interest in video production among contemporary youth, channeling this energy effectively is paramount. Waiting until college to formalize this innate drive risks squandering nascent talent. My proposal aims to establish a program that cultivates this early enthusiasm, instilling proper production values and foundational concepts, thereby shaping these aspiring creators into the industry's legitimate future leaders.</p>
+<p>Inspired by the concept depicted in the film "School of Rock," which culminates in an after-school music program, I propose an analogous model for media. This initiative will serve as a dedicated hub where students interested in the media industry can converge, acquire essential technological proficiencies, and gain invaluable hands-on experience in producing high-quality content. Participants will graduate with a robust video portfolio, providing them a significant advantage in securing their desired roles within their chosen media fields.</p>
+<h4>The Educational Framework</h4>
+<p>Across the city, various high schools offer similar foundational programs. For instance, my own high school experience included a "Mass Media" class that covered the basics of television journalism, radio journalism, advertising, and print media. This class utilized the school's television studio, which historically produced "Kids Biz," a program broadcast via local public access cable for decades before its unfortunate discontinuation due to budget cuts prior to my attendance.</p>
+<p>It is widely understood that during periods of fiscal constraint within school districts, elective courses are often the first to face reductions. While art and music programs frequently enjoy sufficient public support to withstand such cuts, media programs often lack comparable advocacy. Despite the inherent value school boards may recognize in these programs, budgetary realities often necessitate their curtailment.</p>
+<p>Consider an alternative model: a collaborative effort among all Metro Milwaukee Area school districts to collectively fund such a program. Instead of each district bearing the full cost of an in-house media program, they would contribute a fraction of the overall budget, perhaps 1/18th of the total. This approach would result in significant cost savings for individual school districts while simultaneously enabling their students to earn after-school credits in a field of genuine interest. This represents a clear win-win proposition for all stakeholders.</p>
+<h4>Market Analysis and Competitive Advantage</h4>
+<p>The competitive landscape for this after-school program depends on the analytical framework applied. From a pure market size and competitive research perspective, this concept is highly unique within the Milwaukee area. Currently, no comparable program exists, offering an opportunity to dominate the market and deliver substantial value to the Metro Milwaukee Area. Enrollment would be open to students aged 14-24, funded either by their respective school districts or through direct monthly/annual tuition.</p>
+<p>If viewed in competition with other after-school programs (e.g., sports, music), our program differentiates itself through its flexibility. We will operate projects throughout the week, allowing students to select participation days that align with their existing schedules. Provided students meet their agreed-upon commitments and fulfill their project responsibilities, conflicts with other extracurricular activities should be minimized.</p>
+<p>Furthermore, competition inherent in project distribution will serve as a powerful motivator for excellence. All student-produced content will be distributed via YouTube, subjecting it to public reception and performance metrics. This direct exposure to audience feedback, measuring quality against the broader internet, transforms project creation into a "Friday night football game" for the media industry. This competitive environment will inherently drive students to produce superior work.</p>
+<h4>Program Projects and Curriculum</h4>
+<p>The core question revolves around the tangible activities available to students within this after-school program. While broadly categorized as "media," the curriculum encompasses a diverse range of fields.</p>
+<p>Upon entry, students will undergo foundational training in core media concepts and technology. This includes practical instruction on camera operation, microphone usage, principles of image framing, proper subject lighting, and crucial legal aspects of production such as permissions and releases. This foundational knowledge aims to address common deficiencies observed in amateur online content.</p>
+<p>Once prepared, students will transition to active participation in studio productions, gaining hands-on experience across various production fields. Demonstrating proficiency will empower them to actively shape their educational trajectory. For example:
+<ul>
+  <li><strong>Camera Operation:</strong> Students passionate about videography can specialize in projects requiring camera operators.</li>
+  <li><strong>Audio Engineering:</strong> Those with an affinity for sound mixing, perhaps with backgrounds in music, can pursue roles as audio engineers.</li>
+  <li><strong>Video Editing:</strong> Students who enjoy problem-solving and creative assembly can focus on video editing roles.</li>
+  <li><strong>Graphics & Visual Effects:</strong> Individuals skilled in software like Photoshop, After Effects, and Blender can specialize in graphics and video effects.</li>
+  <li><strong>CG Animation:</strong> Students demonstrating a natural aptitude for these programs can further explore computer-generated animation.</li>
+</ul>
+<p>The program champions individual exploration, allowing students to delve deeply into areas of personal passion. We will not impose unrelated learning requirements that might dilute their enthusiasm. The goal is to cultivate a profound dedication to their chosen field, fostering an environment where students invest their full effort into their work. This approach will provide years of practical experience, equipping them with a professional portfolio that can facilitate direct entry into their desired industry upon graduation.</p>
+<p>As students advance and gain experience, particularly older participants nearing program completion, they will assume greater leadership roles. Beyond contributing to existing productions, these senior students will have the opportunity to conceive and lead their own projects. They will submit detailed project outlines for staff approval, and if greenlit, will be responsible for assigning roles to junior students. This affords them invaluable experience as producers and directors, enabling them to create their own podcasts, music videos, documentaries, or even feature films. Staff guidance will be provided, but the ultimate success of these student-led productions will hinge on their dedicated effort.</p>
+<p>Crucially, the program will also cater to individuals interested in on-screen or on-air careers. Aspiring actors, journalists, and on-air personalities will gain practical experience in front of cameras and microphones.</p>
+<p>While most projects will be student-driven, a select number of established programs will ensure consistent content and provide structured learning opportunities:
+<ul>
+  <li><strong>News Program (Mondays & Wednesdays):</strong> Students will gain real-world experience in meeting deadlines and operating a basic television studio environment.</li>
+  <li><strong>Morning Show (Tuesdays & Thursdays):</strong> This program will mirror podcast/radio formats, focusing on lighter, topical events of the week.</li>
+  <li><strong>Weekly Topical Program (Fridays):</strong> This will feature in-depth segments, emulating shows like 60 Minutes or Dateline.</li>
+</ul>
+<p>All content produced will be geared towards youth interests and news, ensuring relevance and engagement for a target viewership within the same age demographic as our students. Additionally, official Majestic Media Projects may be incorporated as learning opportunities for the students, as deemed appropriate.</p>
+<h4>Funding Model and Financial Sustainability</h4>
+<p>The operational model for this venture incorporates multiple revenue streams to ensure long-term financial viability. These sources are categorized as Active, Passive, and Side Project income.
+<ul>
+  <li><strong>Passive Income</strong>
+    <ul>
+      <li><strong>Viewership Revenue:</strong> The most direct income source will be generated through online distribution platforms like YouTube. Revenue derived from content viewership will flow into a dedicated passive fund. While individual students producing content may receive a percentage, the majority of these funds will be pooled to support overall program operations.</li>
+      <li><strong>Advertising & Sponsorships:</strong> Online content provides significant opportunities for business involvement. Securing sponsorships for programs, such as our news broadcasts (e.g., 60-second commercial spots), represents a valuable additional revenue stream. Advertising placements can be integrated into any content created, generating ongoing profits as long as the content remains accessible online.</li>
+    </ul>
+  </li>
+  <li><strong>Side Project Income</strong>
+    <ul>
+      <li><strong>Production Company Services:</strong> With a fully equipped studio, advanced equipment, and a motivated workforce, the program can leverage its assets by operating as a professional production company during off-hours (primarily when younger students are in school). This involves taking on paying client projects such as wedding videography, commercial production, and other media services. This not only generates income but also provides older students with invaluable real-world production experience.</li>
+    </ul>
+  </li>
+</ul>
+<p>Passive and Side Project income streams will collectively serve as the primary contributors to covering the program's operational costs and labor expenses. This supplementary income significantly reduces the required tuition fees per student. Our financial model is structured as follows:</p>
+<p>(Operational Costs + Labor Costs + Selected Profit Percentage) = Total Revenue Required</p>
+<p>Total Revenue Required - (Side Project Income + Passive Income) = Active Income Needed</p>
+<p>Active Income Needed / Projected Number of Students = Per-Student Tuition</p>
+<p>This multi-faceted income strategy ensures that tuition remains accessible while guaranteeing a consistent profit margin for investors, thereby assuring a return on investment.
+<ul>
+  <li><strong>Active Income</strong>
+    <ul>
+      <li><strong>Tuition:</strong> The foundational revenue stream will be tuition fees, payable monthly or as an annual lump sum by students, parents, or guardians.</li>
+      <li><strong>School District Contributions:</strong> This program is designed to offer Metro Milwaukee Area school districts a cost-effective media education solution. Instead of bearing the full burden of an internal media program, participating districts would contribute a fractional share of the overall budget. Districts would be charged a base operational cost and would have the option to either fully cover student tuition or offer it at a subsidized rate to their enrolled students.</li>
+    </ul>
+  </li>
+</ul>
+<h4>Conclusion: Investing in the Future of Media</h4>
+<p>The media landscape is in constant flux, shaped by technological advancements and evolving consumption habits. This proposal outlines not just an after-school program, but a vital initiative to proactively address the challenges and seize the opportunities within this dynamic industry. By nurturing talent, instilling professional standards, and fostering creative exploration, the Majestic Media After-School Program will equip Milwaukee's youth with the skills, experience, and ethical framework necessary to become the responsible and innovative media leaders of tomorrow.</p>
+<p>Our comprehensive curriculum, combined with a sustainable, multi-faceted funding model, presents a compelling investment opportunity. We offer a unique value proposition to students, school districts, and investors alike, creating a win-win ecosystem where quality education, community benefit, and financial return converge.</p>
+<p>Join us in building a future where media is defined not by fleeting trends or superficial metrics, but by genuine talent, thoughtful creation, and impactful storytelling. Your support will directly empower the next generation of content creators, ensuring that the future of media is not only accessible but also exceptionally crafted.</p>
+<p>We invite you to partner with Majestic Media in shaping this transformative vision. Let's cultivate excellence, one story, one student, one professionally produced piece of content at a time.</p>
+  `
+}
+  };
+
+ // init
+  const buttons = Array.from(document.querySelectorAll('.proj-btn'));
+  const titleEl = document.getElementById('entry-title');
+  const dateEl = document.getElementById('entry-date');
+  const bodyEl = document.getElementById('entry-body');
+
+  function renderProject(key){
+    const data = PROJECTS[key] || { title: key, date: '', html: '<p>Not found.</p>' };
+    titleEl.textContent = data.title;
+    dateEl.textContent = data.date || '';
+    bodyEl.innerHTML = data.html;
+  }
+
+  // initial render
+  renderProject('chrono');
+
+  // button interactions (accessibility-friendly)
+  buttons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      buttons.forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
+      const key = btn.getAttribute('data-project');
+      renderProject(key);
+      document.querySelector('.right-col').focus();
+    });
+    btn.addEventListener('mousedown', ()=> btn.classList.add('pressing'));
+    btn.addEventListener('mouseup', ()=> btn.classList.remove('pressing'));
+    btn.addEventListener('mouseleave', ()=> btn.classList.remove('pressing'));
+    btn.addEventListener('keydown', (ev)=>{
+      if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); btn.click(); }
+    });
+  });
+
+  // arrow navigation within left-col
+  document.querySelector('.left-col').addEventListener('keydown', (ev)=>{
+    const idx = buttons.findIndex(b => b === document.activeElement);
+    if(ev.key === 'ArrowDown'){ ev.preventDefault(); const next = buttons[(idx+1)%buttons.length]; next.focus(); }
+    if(ev.key === 'ArrowUp'){ ev.preventDefault(); const prev = buttons[(idx-1+buttons.length)%buttons.length]; prev.focus(); }
+  });
+})();
+</script>

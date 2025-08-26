@@ -1,0 +1,286 @@
+<!-- REPLACE your Pulse block with this full block -->
+<div class="pulse-wrap"> <!-- outer wrapper supplies the 28px top/bottom spacing -->
+  <div id="pulse-wrapper" class="frame-like">
+    <div class="pulse-list-column" aria-label="Dates">
+      <ul class="pulse-list" id="pulse-list">
+        <li>Jul 28, 2025 – Entry 21</li>
+        <li>Jul 29, 2025 – Entry 20</li>
+        <li>Jul 30, 2025 – Entry 19</li>
+        <li>Jul 31, 2025 – Entry 18</li>
+        <li>Aug 1, 2025 – Entry 17</li>
+        <li>Aug 2, 2025 – Entry 16</li>
+        <li>Aug 3, 2025 – Entry 15</li>
+        <li>Aug 4, 2025 – Entry 14</li>
+        <li>Aug 5, 2025 – Entry 13</li>
+        <li>Aug 6, 2025 – Entry 12</li>
+        <li>Aug 7, 2025 – Current Entry</li>
+        <li>Aug 8, 2025 – Entry 11</li>
+        <li>Aug 9, 2025 – Entry 10</li>
+        <li>Aug 10, 2025 – Entry 9</li>
+        <li>Aug 11, 2025 – Entry 8</li>
+        <li>Aug 12, 2025 – Entry 7</li>
+        <li>Aug 13, 2025 – Entry 6</li>
+        <li>Aug 14, 2025 – Entry 5</li>
+        <li>Aug 15, 2025 – Entry 4</li>
+        <li>Aug 16, 2025 – Entry 3</li>
+        <li>Aug 17, 2025 – Entry 2</li>
+        <li>Aug 18, 2025 – Entry 1</li>
+      </ul>
+    </div>
+
+    <div class="pulse-right">
+      <div class="pulse-entry-header" role="banner">
+        <div id="entry-date">Aug 7, 2025</div>
+        <h2 id="entry-title">Current Entry</h2>
+      </div>
+
+      <!-- NOTE: content goes inside .pulse-entry-body -->
+      <div class="pulse-entry-body" role="main" aria-live="polite">
+        <div class="sapphire-overlay" aria-hidden="true"></div>
+        <ul>
+          <li>Production Entry</li>
+          <li>Blog Entry</li>
+          <li>News Article</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ---------- SPACING SYSTEM + PULSE PAGE STYLES ---------- */
+:root{
+  /* blue used on Pulse */
+  --blue-r: 30; --blue-g:102; --blue-b:220;
+
+  /* spacing system to match your "showcase" example */
+  --outer-padding: 28px;         /* .pulse-wrap padding (top & bottom) */
+  --pulse-frame-thickness: 20px; /* visible rim thickness (top & bottom) */
+  --pulse-frame-inner-pad: 22px; /* padding inside frame (top & bottom) */
+
+  /* pulse sizing */
+  --pulse-max-width: 1260px;
+  --pulse-min-height: 900px;
+
+  /* left column */
+  --pulse-left-width: 300px;
+  --pulse-border-tile-width: 300px;
+
+  /* visual tuning */
+  --pulse-floor-gap: 28px;
+  --pulse-floor-line-opacity: 0.035;
+  --pulse-sheen-opacity: 0.18;
+  --pulse-glass-alpha: 0.24;
+
+  --pulse-body-min: 18px;
+  --pulse-body-max: 22px;
+  --pulse-title-min: 34px;
+  --pulse-title-max: 56px;
+}
+
+/* reset */
+html,body{ height:100%; margin:0; background:#000; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; font-family: Georgia, serif; }
+*{ box-sizing: border-box; }
+
+/* outer wrapper that provides EXACT outer spacing (28px top & bottom) */
+.pulse-wrap{
+  padding: var(--outer-padding) 12px; /* top/bottom 28px, left/right small gutter */
+  box-sizing: border-box;
+  display:flex;
+  justify-content:center; /* center the frame */
+}
+
+/* pulse wrapper (the frame) 
+   spacing: border thickness + inner padding match your showcase math:
+   outer padding (28) + border (20) + padding (22) = 70px top/bottom to content
+*/
+#pulse-wrapper{
+  display:flex;
+  width: calc(100% - 48px);
+  max-width: var(--pulse-max-width);
+  margin: 0 auto;
+  min-height: var(--pulse-min-height);
+  height: calc(100vh - 48px);
+  border-radius:6px;
+  overflow:hidden;
+
+  /* frame border thickness controlled by --pulse-frame-thickness */
+  border: var(--pulse-frame-thickness) solid rgba(var(--blue-r),var(--blue-g),var(--blue-b),0.34);
+
+  /* inner padding (this is the "frame padding" used in the spacing sum) */
+  padding: var(--pulse-frame-inner-pad);
+
+  background: linear-gradient(180deg, rgba(var(--blue-r),var(--blue-g),var(--blue-b),0.08), rgba(var(--blue-r),var(--blue-g),var(--blue-b),0.02));
+  box-shadow: 0 16px 24px rgba(var(--blue-r),var(--blue-g),var(--blue-b),0.18), inset 0 2px 8px rgba(255,255,255,0.02);
+  box-sizing: border-box;
+}
+
+/* left column */
+.pulse-list-column{
+  width: var(--pulse-left-width);
+  flex: 0 0 var(--pulse-left-width);
+  display:flex;
+}
+
+/* scroller */
+.pulse-list{
+  width:100%;
+  height:100%;
+  margin:0;
+  padding: 22px 10px; /* internal padding for items */
+  list-style:none;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  border-radius:6px;
+
+  background-image:
+    url("https://static1.squarespace.com/static/6891a6f0dcd941394db83fc9/t/68997adcd9d1ef0f52a73d92/1754888930429/af394449-43fa-4961-ba26-93fa88bf736a.jpg"),
+    linear-gradient(180deg, rgba(var(--blue-r),var(--blue-g),var(--blue-b),0.24), rgba(var(--blue-r),var(--blue-g),var(--blue-b),0.16));
+  background-repeat: repeat-y, no-repeat;
+  background-size: var(--pulse-border-tile-width) 1200px, cover;
+  background-position: center top, center center;
+
+  backdrop-filter: blur(6px) saturate(120%);
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+  border: 1px solid rgba(150,180,255,0.10);
+  box-shadow: inset 0 6px 16px rgba(255,255,255,0.02), 0 10px 18px rgba(var(--blue-r),var(--blue-g),var(--blue-b),0.22);
+  position: relative;
+}
+
+/* list item */
+.pulse-list li{
+  background: rgba(0,0,0,0.48);
+  padding:10px 12px;
+  border-radius:6px;
+  color:#e6eefc;
+  border:1px solid rgba(255,255,255,0.02);
+  font-size: 18px; font-weight:700; line-height:1.3;
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+.pulse-list li.active,
+.pulse-list li:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(var(--blue-r),var(--blue-g),var(--blue-b),0.25);
+  color:#fff;
+}
+
+/* right column */
+.pulse-right{
+  flex:1; min-width:0;
+  display:flex; flex-direction:column; position:relative;
+  border-left: 8px solid rgba(var(--blue-r),var(--blue-g),var(--blue-b),0.28);
+  background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.06));
+}
+
+/* header */
+.pulse-entry-header{
+  position: relative;
+  z-index: 6;
+  min-height: 72px;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  padding: 12px 20px;
+  background: linear-gradient(180deg, rgba(10,12,36,0.98), rgba(0,0,18,0.96));
+  box-shadow: 0 6px 12px rgba(0,0,0,0.45), inset 0 -2px 0 rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+
+/* entry body: we removed extra margins/paddings to respect the spacing math above */
+.pulse-entry-body{
+  position:relative; z-index:4;
+  flex:1; overflow:auto;
+  padding: 0; /* content padding is optional — frame padding already applied via #pulse-wrapper */
+  margin-top: 0;
+
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,var(--pulse-floor-line-opacity)) 0px,
+      rgba(255,255,255,var(--pulse-floor-line-opacity)) 1px,
+      rgba(0,0,0,0) 1px,
+      rgba(0,0,0,0) calc(var(--pulse-floor-gap))
+    ),
+    linear-gradient(120deg, rgba(255,255,255,var(--pulse-sheen-opacity)) 0%, rgba(255,255,255,0) 35%),
+    linear-gradient(180deg, rgba(var(--blue-r),var(--blue-g),var(--blue-b),var(--pulse-glass-alpha)), rgba(0,8,48,0.32)),
+    radial-gradient(ellipse at 50% 80%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.48) 85%);
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 100% auto, 100% 46%, cover, cover;
+  background-position: 0 0, 0 6%, center center, center bottom;
+
+  color:#e8f1ff;
+  border-radius: 0 10px 10px 0;
+  border-left: 1px solid rgba(255,255,255,0.02);
+
+  box-shadow: inset 0 10px 22px rgba(255,255,255,0.01), inset 0 -14px 36px rgba(0,0,0,0.32);
+
+  font-size: clamp(var(--pulse-body-min), calc(0.95rem + 0.6vw), var(--pulse-body-max));
+  line-height: 1.6;
+}
+
+/* sheen overlay */
+.pulse-entry-body .sapphire-overlay{
+  position:absolute; inset:0; pointer-events:none; z-index:3;
+  background-image:
+    linear-gradient(120deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 35%),
+    url('https://www.transparenttextures.com/patterns/asfalt-light.png');
+  background-size: 100% 36%, 160px 160px;
+  background-blend-mode: overlay;
+  opacity: 0.95;
+  mix-blend-mode: overlay;
+}
+
+/* responsive tweaks */
+@media (max-width:900px){
+  :root{
+    --pulse-left-width: 160px;
+    --pulse-border-tile-width: 160px;
+    --pulse-body-max: 18px;
+    --pulse-title-max: 40px;
+  }
+  #pulse-wrapper{ height: calc(100vh - 40px); min-height: 560px; width: calc(100% - 32px); padding: 16px; border: var(--pulse-frame-thickness) solid rgba(var(--blue-r),var(--blue-g),var(--blue-b),0.34); }
+  .pulse-list{ padding:16px 8px; background-size: var(--pulse-border-tile-width) 1100px, cover; }
+  .pulse-list li{ font-size: 14px; padding:8px 10px; }
+  .pulse-entry-body{ padding: 18px 20px 28px; font-size:16px; margin-top:8px; }
+}
+</style>
+
+<script>
+/* Keep existing dynamic list sizing and scroll-to-current behavior */
+(function(){
+  const list = document.getElementById('pulse-list');
+  if(!list) return;
+  const items = Array.from(list.children);
+
+  function updateThickness(){
+    const rect = list.getBoundingClientRect();
+    const centerY = rect.top + rect.height/2;
+
+    items.forEach(li=>{
+      const liRect = li.getBoundingClientRect();
+      const liCenter = liRect.top + liRect.height/2;
+      const dist = Math.abs(liCenter - centerY);
+      const norm = Math.min(dist / (rect.height/2), 1);
+
+      const maxSize = 28; /* px at center */
+      const minSize = 16; /* px at edges */
+      const size = Math.round(maxSize - (maxSize - minSize) * norm);
+      li.style.fontSize = size + 'px';
+
+      const maxWeight = 900;
+      const minWeight = 500;
+      const weight = Math.round(maxWeight - (maxWeight - minWeight) * norm);
+      li.style.fontWeight = weight;
+    });
+  }
+
+  window.addEventListener('load', ()=>{
+    const current = Array.from(list.children).find(li => li.textContent.includes('Current Entry'));
+    if(current) current.scrollIntoView({ block: 'center', behavior: 'auto' });
+    updateThickness();
+  });
+
+  list.addEventListener('scroll', updateThickness, { passive: true });
+  window.addEventListener('resize', updateThickness);
+})();
+</script>
