@@ -165,7 +165,10 @@
 /* color chosen from your RGB (120,0,120) -> #780078 */
 :root{
   --purple: #780078;
-  --purple-alpha: rgba(120,0,120,0.95);
+  --purple-r: 120;
+  --purple-g: 0;
+  --purple-b: 120;
+  --purple-alpha: rgba(var(--purple-r),var(--purple-g),var(--purple-b),0.95);
   --bg: #070006;                 /* darkened purple / near-black background */
   --frame-thickness: 20px;       /* rim thickness (per site rules) */
   --frame-inner-pad: 22px;       /* inner padding inside rim */
@@ -179,10 +182,11 @@
   --text-muted: #e9e2d2;
   --accent-line: rgba(120,0,120,0.14);
   --floor-gap: 28px;
-  --floor-line-opacity: 0.08;
-  --sheen-opacity: 0.24;
-  --glass-alpha: 0.32
-  }
+  --floor-line-opacity: 0.18;
+  --sheen-opacity: 0.28;
+  --glass-alpha: 0.24;
+}
+
 
 /* base / reset */
 html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; color:#fff; }
@@ -215,13 +219,15 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
   background-image:
     repeating-linear-gradient(
       to bottom,
-      rgba(255,255,255,var(--floor-line-opacity)) 0px,
-      rgba(255,255,255,var(--floor-line-opacity)) 1px,
+      rgba(var(--purple-r),var(--purple-g),var(--purple-b),var(--floor-line-opacity)) 0px,
+      rgba(var(--purple-r),var(--purple-g),var(--purple-b),var(--floor-line-opacity)) 1px,
+
       rgba(0,0,0,0) 1px,
       rgba(0,0,0,0) var(--floor-gap)
     ),
     linear-gradient(120deg, rgba(255,255,255,var(--sheen-opacity)) 0%, rgba(255,255,255,0) 35%),
-    linear-gradient(180deg, rgba(120,0,120,var(--glass-alpha)), rgba(20,0,20,0.32)),
+    linear-gradient(180deg, rgba(var(--purple-r),var(--purple-g),var(--purple-b),var(--glass-alpha)), rgba(20,0,20,0.32)),
+
     radial-gradient(ellipse at 50% 80%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.48) 85%);
   background-repeat: repeat, no-repeat, no-repeat, no-repeat;
   background-size: 100% auto, 100% 46%, cover, cover;
@@ -250,7 +256,7 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
     url('https://www.transparenttextures.com/patterns/asfalt-light.png');
   background-size: 100% 36%, 160px 160px;
   background-blend-mode: overlay;
-  opacity: 0.4;
+  opacity: 0.25;
 
   mix-blend-mode: overlay;
   border-radius: inherit;
