@@ -3,6 +3,7 @@
   <div class="connect-wrap">
     <section class="connect-frame" aria-labelledby="connect-title" role="region">
       <h1 id="connect-title" class="visually-hidden">Connect</h1>
+      <div class="amethyst-overlay" aria-hidden="true"></div>
 
       <div class="connect-inner">
         <!-- LEFT 2/3 (scrollable content area) -->
@@ -177,6 +178,10 @@
   --text-strong: #f6efe6;
   --text-muted: #e9e2d2;
   --accent-line: rgba(120,0,120,0.14);
+  --floor-gap: 28px;
+  --floor-line-opacity: 0.08;
+  --sheen-opacity: 0.24;
+  --glass-alpha: 0.32;
 }
 
 /* base / reset */
@@ -204,10 +209,23 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
   box-sizing: border-box;
   position: relative;
   border-radius: 8px;
-  overflow: visible;
+  overflow: hidden;
   padding: var(--frame-inner-pad);    /* inner padding = 22px */
   border: var(--frame-thickness) solid var(--purple-alpha); /* visible rim = 20px */
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.03));
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,var(--floor-line-opacity)) 0px,
+      rgba(255,255,255,var(--floor-line-opacity)) 1px,
+      rgba(0,0,0,0) 1px,
+      rgba(0,0,0,0) var(--floor-gap)
+    ),
+    linear-gradient(120deg, rgba(255,255,255,var(--sheen-opacity)) 0%, rgba(255,255,255,0) 35%),
+    linear-gradient(180deg, rgba(120,0,120,var(--glass-alpha)), rgba(20,0,20,0.32)),
+    radial-gradient(ellipse at 50% 80%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.48) 85%);
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 100% auto, 100% 46%, cover, cover;
+  background-position: 0 0, 0 6%, center center, center bottom;
   /* subtle outer shadow */
   box-shadow: 0 12px 22px rgba(0,0,0,0.6), inset 0 2px 6px rgba(255,255,255,0.02);
 }
@@ -221,6 +239,20 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
   pointer-events:none;
   box-shadow: inset 0 0 0 1px rgba(120,0,120,0.09);
   z-index:0;
+}
+
+.amethyst-overlay{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(120deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 35%),
+    url('https://www.transparenttextures.com/patterns/asfalt-light.png');
+  background-size: 100% 36%, 160px 160px;
+  background-blend-mode: overlay;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  border-radius: inherit;
 }
 
 /* inner layout: left & right columns */
