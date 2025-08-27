@@ -413,9 +413,28 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
 .faq { margin-top: 12px; min-height: 260px; }
 
 /* FAQ details styling */
-.faq details { margin-bottom: 8px; }
-.faq summary { cursor: pointer; font-weight:700; margin-bottom:6px; color: var(--text-strong); }
-.faq summary::-webkit-details-marker { display:none; }
+.faq details {
+  margin-bottom: 12px;
+  border-left: 2px solid var(--accent-line);
+  padding-left: 10px;
+}
+.faq summary {
+  cursor: pointer;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text-strong);
+  display: flex;
+  align-items: center;
+}
+.faq summary::before {
+  content: "+";
+  font-weight: 700;
+  margin-right: 8px;
+}
+.faq details[open] summary::before {
+  content: "\2212"; /* minus sign */
+}
+.faq summary::-webkit-details-marker { display: none; }
 
 /* right column sizes (stacked) */
 .connect-right .panel { min-height: 120px; flex-shrink: 0; }
