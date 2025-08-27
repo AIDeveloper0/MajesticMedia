@@ -317,6 +317,7 @@
 
   /* sizing to match Pulse/Projects */
   --max-width: 1260px;
+
   --outer-padding: 28px;        /* wrapper top spacing */
   --frame-thickness: 20px;      /* visible rim thickness */
   --frame-inner-pad: 22px;      /* inner padding inside rim */
@@ -360,6 +361,7 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
   width: calc(100% - 48px);
   max-width: var(--max-width);
   height: calc(100vh - 28px);
+
   border-radius: 6px;
   overflow: visible; /* scrolling moved to .sp-inner so topbar stays fixed */
   position: relative;
@@ -509,6 +511,7 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
   border-radius: 4px;
   padding: 40px 36px 28px;
   box-sizing: border-box;
+
 
   background-image:
     repeating-linear-gradient(
