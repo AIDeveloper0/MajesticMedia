@@ -1,5 +1,5 @@
 <div id="sponsorship-page">
-  <div class="sp-wrap"> <!-- outer wrapper supplies 28px top/bottom spacing -->
+  <div class="sp-wrap"> <!-- outer wrapper supplies 28px top spacing -->
     <div class="sp-frame" role="region" aria-label="Sponsorship window">
 
       <!-- TOP BAR: tabs sit visually inside the frame and remain fixed -->
@@ -318,7 +318,7 @@
   /* sizing to match Pulse/Projects */
   --max-width: 1260px;
   --min-height: 900px;
-  --outer-padding: 28px;        /* wrapper top/bottom spacing */
+  --outer-padding: 28px;        /* wrapper top spacing */
   --frame-thickness: 20px;      /* visible rim thickness */
   --frame-inner-pad: 22px;      /* inner padding inside rim */
 
@@ -348,9 +348,9 @@
 html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; color:#fff; }
 .sponsorship-wrapper { box-sizing: border-box; }
 
-/* OUTER wrapper supplies the 28px spacing like Pulse */
+/* OUTER wrapper supplies 28px top spacing so footer sits flush */
 .sp-wrap {
-  padding: var(--outer-padding) 12px;
+  padding: var(--outer-padding) 12px 0;
   display:flex;
   justify-content:center;
   box-sizing: border-box;
@@ -360,7 +360,7 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
 .sp-frame {
   width: calc(100% - 48px);
   max-width: var(--max-width);
-  height: calc(100vh - 48px);
+  height: calc(100vh - 28px);
   min-height: var(--min-height);
   border-radius: 6px;
   overflow: visible; /* scrolling moved to .sp-inner so topbar stays fixed */
