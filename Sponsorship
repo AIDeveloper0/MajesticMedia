@@ -1,5 +1,5 @@
 <div id="sponsorship-page">
-  <div class="sp-wrap"> <!-- outer wrapper supplies 28px top/bottom spacing -->
+  <div class="sp-wrap"> <!-- outer wrapper supplies 28px top spacing -->
     <div class="sp-frame" role="region" aria-label="Sponsorship window">
 
       <!-- TOP BAR: tabs sit visually inside the frame and remain fixed -->
@@ -303,8 +303,6 @@
 
 </div> </section>
 
-      <!-- decorative inner bottom strip -->
-      <div class="sp-inner-bottom"></div>
     </div>
   </div>
 </div>
@@ -320,7 +318,7 @@
   /* sizing to match Pulse/Projects */
   --max-width: 1260px;
   --min-height: 900px;
-  --outer-padding: 28px;        /* wrapper top/bottom spacing */
+  --outer-padding: 28px;        /* wrapper top spacing */
   --frame-thickness: 20px;      /* visible rim thickness */
   --frame-inner-pad: 22px;      /* inner padding inside rim */
 
@@ -328,7 +326,6 @@
   --frame-corner-size: 96px;
   --frame-side-w: 48px;
   --frame-top-h: 84px;
-  --inner-bottom-h: 56px;
   --tab-h: 48px;
   --tab-min-w: 110px;
   --tab-max-w: 260px;
@@ -351,9 +348,9 @@
 html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; color:#fff; }
 .sponsorship-wrapper { box-sizing: border-box; }
 
-/* OUTER wrapper supplies the 28px spacing like Pulse */
+/* OUTER wrapper supplies 28px top spacing so footer sits flush */
 .sp-wrap {
-  padding: var(--outer-padding) 12px;
+  padding: var(--outer-padding) 12px 0;
   display:flex;
   justify-content:center;
   box-sizing: border-box;
@@ -363,7 +360,7 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
 .sp-frame {
   width: calc(100% - 48px);
   max-width: var(--max-width);
-  height: calc(100vh - 48px);
+  height: calc(100vh - 28px);
   min-height: var(--min-height);
   border-radius: 6px;
   overflow: visible; /* scrolling moved to .sp-inner so topbar stays fixed */
@@ -418,10 +415,8 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
   z-index:40; /* high so it stays above scrolling content */
   pointer-events:auto;
 
-  /* glassy gold strip behind the tabs */
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.04)),
-    linear-gradient(180deg, rgba(230,190,0,0.14), rgba(176,139,0,0.08));
+  /* top bar background image */
+  background: url("https://static1.squarespace.com/static/6891a6f0dcd941394db83fc9/t/68ae760701f5ce7cc419ecca/1756263944302/1000171750.jpg") center/cover no-repeat;
   border-radius:6px;
   padding: 8px 12px;
   box-shadow: 0 6px 0 rgba(0,0,0,0.45);
@@ -507,7 +502,7 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
   left: var(--frame-inner-pad);
   right: calc(var(--frame-inner-pad) + var(--scrollbar-w)); /* leave space for scrollbar */
   top: calc(var(--frame-top-h) + 44px); /* starts below topbar with extra gap */
-  bottom: calc(var(--inner-bottom-h) + 8px);
+  bottom: 8px;
   overflow: auto;
   z-index:10; /* below topbar */
 
@@ -516,7 +511,7 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
   border-radius: 4px;
   padding: 40px 36px 28px;
   box-sizing: border-box;
-  min-height: calc(var(--min-height) - (var(--frame-top-h) + var(--inner-bottom-h) + (var(--frame-inner-pad) * 2)));
+  min-height: calc(var(--min-height) - (var(--frame-top-h) + (var(--frame-inner-pad) * 2)));
 
   background-image:
     repeating-linear-gradient(
@@ -597,19 +592,8 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
 .sp-inner h3 { color: #fff; margin-top:12px; margin-bottom:6px; }
 
 /* ensure small bottom decorative strip */
-.sp-inner-bottom {
-  position:absolute;
-  left: var(--frame-inner-pad);
-  right: var(--frame-inner-pad);
-  bottom: 8px;
-  height: 18px;
-  pointer-events:none;
-  z-index:3;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06)), linear-gradient(180deg, var(--gold), var(--gold-dark));
-  opacity:0.95;
-}
-
 /* Tab switch minimal JS hook: now updates panels as well */
+.sp-tab[aria-selected="true"], .sp-tab[aria-selected="true"].active {}
 .sp-tab[aria-selected="true"], .sp-tab[aria-selected="true"].active {}
 
 /* RESPONSIVE: shrink frame top & tabs on small viewports */
