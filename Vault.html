@@ -1,0 +1,282 @@
+<!-- VAULT PAGE (Metal Safe Theme) — 3 x 4 product grid with steel gutters -->
+<!-- Drop this as its own page (vault.html) or mount inside your SPA route -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vault — Majestic Media</title>
+  <style>
+    :root{
+      /* ======= THEME (steel vs showcase ruby) ======= */
+      --gutter-texture-url: url("https://images.unsplash.com/photo-1544465544-1b71dceff6a6?q=80&w=1600&auto=format&fit=crop"); /* brushed steel texture */
+      --steel: #9aa3ad;           /* light steel */
+      --gunmetal: #0f141a;        /* page background */
+      --teal: #0bd3d3;            /* accent (safe LEDs) */
+      --frame-thickness: 20px;    /* outer frame thickness */
+      --tile-gap: 18px;           /* grid gap — texture shows here */
+      --tile-radius: 6px;
+      --max-row-width: 1260px;    /* site content width */
+
+      /* subtle noise overlays */
+      --noise-a: radial-gradient(100% 100% at 0% 0%, rgba(255,255,255,.05), rgba(255,255,255,0) 60%),
+                 radial-gradient(100% 100% at 100% 0%, rgba(255,255,255,.05), rgba(255,255,255,0) 60%),
+                 radial-gradient(100% 100% at 0% 100%, rgba(0,0,0,.20), rgba(0,0,0,0) 60%);
+    }
+
+    /* RESET */
+    html,body{ margin:0; padding:0; background:var(--gunmetal); color:#e8edf2; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; -webkit-font-smoothing:antialiased; }
+    img { max-width:100%; display:block; }
+    a{ color:inherit; }
+
+    /* WRAPPER / CONSTRAINTS */
+    .vault-wrap{
+      width:100%;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding:28px; /* outer spacing */
+      box-sizing:border-box;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.2) 60%),
+        var(--noise-a);
+    }
+
+    /* CONTENT FRAME (steel frame with inner bevel) */
+    .vault-content{
+      width: calc(100% - 56px);
+      max-width: var(--max-row-width);
+      box-sizing:border-box;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.06)),
+        radial-gradient(120% 100% at 50% 0%, rgba(255,255,255,0.06), rgba(255,255,255,0) 60%);
+      border: var(--frame-thickness) solid rgba(154,163,173,0.75);
+      border-radius: 10px;
+      padding: 22px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        inset 0 -1px 0 rgba(0,0,0,0.45),
+        0 10px 40px rgba(0,0,0,0.45);
+      position: relative;
+    }
+
+    /* subtle "open safe" hinge + LED strip */
+    .hinge{
+      position:absolute; left: -12px; top: 40px; bottom: 40px; width: 12px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(0,0,0,0.6));
+      border-radius: 3px;
+    }
+    .led-strip{
+      position:absolute; right: -8px; top: 28px; bottom: 28px; width: 6px;
+      background: linear-gradient(180deg, var(--teal), rgba(11,211,211,0.05));
+      box-shadow: 0 0 12px var(--teal), 0 0 32px rgba(11,211,211,0.4);
+      border-radius: 6px;
+    }
+
+    /* header */
+    .vault-head{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      margin-bottom:14px;
+    }
+    .vault-title{ font-size: clamp(22px, 3vw, 32px); font-weight: 800; letter-spacing: .3px; }
+    .vault-sub{ opacity:.8; font-size:14px; }
+
+    /* vendor hint chip */
+    .vendor-chip{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px;
+      background: rgba(11,211,211,0.08); border:1px solid rgba(11,211,211,0.35);
+      font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.8px;
+    }
+
+    /* GRID (3 x 4) — gutters show steel texture */
+    .vault-grid{
+      display:grid; grid-template-columns: repeat(3, 1fr);
+      gap: var(--tile-gap);
+      background-image: var(--gutter-texture-url);
+      background-size: 600px; background-repeat: repeat; padding:6px; box-sizing:border-box;
+    }
+
+    /* COMPARTMENT TILE (divider walls + rivets) */
+    .compartment{
+      position:relative;
+      border-radius: var(--tile-radius);
+      overflow:hidden;
+      background: linear-gradient(180deg, #1a222b, #111820);
+      box-shadow:
+        inset 0 12px 24px rgba(255,255,255,0.04),
+        inset 0 -20px 30px rgba(0,0,0,0.5),
+        0 6px 0 rgba(0,0,0,0.6);
+      border: 10px solid rgba(154,163,173,0.85); /* steel surround */
+      display:flex; flex-direction:column;
+    }
+
+    /* riveted divider walls */
+    .compartment:before, .compartment:after{
+      content:""; position:absolute; inset:auto 0 0 0; height:10px; /* bottom wall shadow */
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.7));
+    }
+    .compartment:after{
+      inset:0 auto 0 0; width:10px; height:100%; /* left wall shadow */
+      background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(0,0,0,0.7));
+    }
+
+    /* rivets */
+    .rivets{ position:absolute; inset:8px; pointer-events:none; }
+    .rivet{ position:absolute; width:10px; height:10px; border-radius:50%; background: linear-gradient(180deg, #c7d0d9, #7e8791); box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 1px 0 rgba(0,0,0,0.6); }
+    .rivet.tl{ top: -2px; left: -2px; }
+    .rivet.tr{ top: -2px; right: -2px; }
+    .rivet.bl{ bottom: -2px; left: -2px; }
+    .rivet.br{ bottom: -2px; right: -2px; }
+
+    /* media area keeps 4:3 for merch shots */
+    .comp-media{ position:relative; width:100%; padding-top:75%; background:#000; }
+    .comp-media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+
+    .comp-body{ padding:10px 12px; display:flex; flex-direction:column; gap:6px; }
+    .comp-tag{ font-size:11px; letter-spacing:.5px; text-transform:uppercase; opacity:.75; }
+    .comp-title{ font-weight:800; line-height:1.2; }
+    .comp-cta{ margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .price{ font-weight:800; }
+    .btn{
+      appearance:none; border:0; cursor:pointer; border-radius:6px; padding:8px 10px; font-weight:700;
+      background: linear-gradient(180deg, rgba(11,211,211,0.25), rgba(11,211,211,0.12));
+      border:1px solid rgba(11,211,211,0.45); color:#e8ffff;
+      box-shadow: 0 0 8px rgba(11,211,211,0.25);
+    }
+
+    /* modal quick view */
+    .vault-modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:9999; background: rgba(0,0,0,0.72); padding:28px; }
+    .vault-modal[aria-hidden="false"]{ display:flex; }
+    .modal-body{ width: min(1100px, 95%); background:#0d1117; border: 12px solid rgba(154,163,173,0.85); border-radius:10px; overflow:hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.55); }
+    .modal-media{ width:100%; aspect-ratio: 4/3; background:#000; }
+    .modal-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .modal-info{ padding:16px; display:grid; gap:8px; }
+    .modal-title{ font-size:20px; font-weight:800; }
+    .modal-desc{ opacity:.9; }
+    .modal-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:6px; }
+    .modal-close{ position:absolute; right: 28px; top: 28px; z-index:10000; background: rgba(255,255,255,0.06); color:#fff; border:0; padding:8px 12px; font-size:18px; border-radius:6px; cursor:pointer; }
+
+    /* responsive */
+    @media (max-width:1100px){ .vault-grid{ grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width:700px){ .vault-grid{ grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="vault-wrap">
+    <main class="vault-content" aria-label="Vault">
+      <span class="hinge" aria-hidden="true"></span>
+      <span class="led-strip" aria-hidden="true"></span>
+
+      <header class="vault-head">
+        <div>
+          <div class="vault-title">The Vault</div>
+          <div class="vault-sub">Same layout as Showcase • Steel skin • Divider walls like an open safe</div>
+        </div>
+        <div class="vendor-chip" title="Recommended stack for fulfillment">Optimized for Shopify + Printful</div>
+      </header>
+
+      <!-- PRODUCT GRID (12 items) -->
+      <section class="vault-grid" id="vault-grid" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <!-- Quick View Modal -->
+  <div id="vault-modal" class="vault-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Quick view">
+    <button id="modal-close" class="modal-close" aria-label="Close">✕</button>
+    <div class="modal-body">
+      <div class="modal-media"><img id="modal-img" alt="" /></div>
+      <div class="modal-info">
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-desc" id="modal-desc"></div>
+        <div class="modal-actions">
+          <!-- Replace href with actual product URL when connected to vendor storefront -->
+          <a id="modal-link" class="btn" href="#" target="_blank" rel="noopener noreferrer">View / Buy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================
+       DATA: Seed items that map to your content plan. Replace images/links.
+       ========================== */
+    const items = [
+      // Brand merch
+      { tag: 'Majestic Media', title: 'Logo Hat', price: '$24', img: 'https://images.unsplash.com/photo-1516826957135-700dedea698c?q=80&w=1200&auto=format&fit=crop', url: '#'},
+      { tag: 'Majestic Media', title: 'Logo Tee', price: '$28', img: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop', url: '#'},
+      { tag: 'Majestic Media', title: 'Logo Hoodie', price: '$49', img: 'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?q=80&w=1200&auto=format&fit=crop', url: '#'},
+      { tag: 'Majestic Media', title: 'Water Bottle', price: '$19', img: 'https://images.unsplash.com/photo-1570002072610-05c3e1b1b673?q=80&w=1200&auto=format&fit=crop', url: '#'},
+      { tag: 'Majestic Media', title: 'Bumper Sticker', price: '$6', img: 'https://images.unsplash.com/photo-1553633878-7b404b7d2b93?q=80&w=1200&auto=format&fit=crop', url: '#'},
+
+      // Individual shows (placeholder artwork)
+      { tag: 'Show Merch', title: 'Show A Tee', price: '$28', img: 'https://images.unsplash.com/photo-1520975682031-ae4c9b1a4a2b?q=80&w=1200&auto=format&fit=crop', url: '#'},
+      { tag: 'Show Merch', title: 'Show B Hoodie', price: '$49', img: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop', url: '#'},
+
+      // Future pipeline items (display-only until ready)
+      { tag: 'Coming Soon', title: 'Order of Chaos — Book I', price: 'TBA', img: 'https://images.unsplash.com/photo-1519682337058-a94d519337bc?q=80&w=1200&auto=format&fit=crop', url: '#'},
+      { tag: 'Coming Soon', title: 'The Dire Realm — Card Game', price: 'TBA', img: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop', url: '#'},
+      { tag: 'Coming Soon', title: 'Interstellar — PC/Mobile', price: 'Download TBA', img: 'https://images.unsplash.com/photo-1517976487492-576ea6b2936d?q=80&w=1200&auto=format&fit=crop', url: '#'},
+      { tag: 'Future Projects', title: 'Limited-Run Physical', price: 'TBA', img: 'https://images.unsplash.com/photo-1520975682031-ae4c9b1a4a2b?q=80&w=1200&auto=format&fit=crop', url: '#'},
+      { tag: 'Future Projects', title: 'Collector Series', price: 'TBA', img: 'https://images.unsplash.com/photo-1519682337058-a94d519337bc?q=80&w=1200&auto=format&fit=crop', url: '#'},
+    ];
+
+    /* Build a compartment tile */
+    function Compartment(item){
+      const el = document.createElement('article');
+      el.className = 'compartment';
+      el.innerHTML = `
+        <div class="rivets" aria-hidden="true">
+          <span class="rivet tl"></span>
+          <span class="rivet tr"></span>
+          <span class="rivet bl"></span>
+          <span class="rivet br"></span>
+        </div>
+        <div class="comp-media"><img src="${item.img}" alt="${item.title}"></div>
+        <div class="comp-body">
+          <div class="comp-tag">${item.tag}</div>
+          <div class="comp-title">${item.title}</div>
+          <div class="comp-cta">
+            <span class="price">${item.price}</span>
+            <button class="btn" data-link="${item.url}" data-img="${item.img}" data-title="${item.title}">Quick View</button>
+          </div>
+        </div>
+      `;
+      return el;
+    }
+
+    function renderGrid(list){
+      const grid = document.getElementById('vault-grid');
+      grid.innerHTML = '';
+      list.slice(0,12).forEach(item => grid.appendChild(Compartment(item)));
+    }
+
+    // Modal plumbing
+    const modal = document.getElementById('vault-modal');
+    const modalClose = document.getElementById('modal-close');
+    const modalImg = document.getElementById('modal-img');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDesc = document.getElementById('modal-desc');
+    const modalLink = document.getElementById('modal-link');
+
+    document.addEventListener('click', function(ev){
+      const btn = ev.target.closest('.btn');
+      if(!btn || !btn.dataset.link) return;
+      modalImg.src = btn.dataset.img || '';
+      modalTitle.textContent = btn.dataset.title || '';
+      modalDesc.textContent = 'High‑quality POD item fulfilled on demand. Ships automatically via connected vendor.';
+      modalLink.href = btn.dataset.link;
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e){ if(e.target === modal) closeModal(); });
+
+    function closeModal(){ modal.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; }
+
+    document.addEventListener('DOMContentLoaded', function(){ renderGrid(items); });
+  </script>
+</body>
+</html>
