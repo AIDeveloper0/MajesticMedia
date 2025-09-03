@@ -1,0 +1,309 @@
+<!-- Curator's Club — Steel/Hex texture + exact sizing -->
+<div class="showcase-wrap">
+  <div class="showcase-content">
+    <!-- Main frame (screen + right menu) -->
+    <section class="entry">
+      <!-- Screen / content area -->
+      <div class="entry-body" id="screen">
+        <div class="screen-inner">
+          <h2>Welcome to The Curator’s Club</h2>
+          <p>Select a section on the right to load content here.</p>
+        </div>
+      </div>
+
+      <!-- Right column menu (300px) -->
+      <aside class="entry-menu" aria-label="Sections">
+        <ul class="menu-list" id="menu">
+          <!-- Set data-active="false" to grey out an item -->
+          <li data-key="Greenlight"               data-active="true">Greenlight</li>
+          <li data-key="The Chrono-Viewer Database" data-active="true">Chrono-Viewer<br/>Database</li>
+          <li data-key="Simulated"                data-active="true">Simulated</li>
+          <li data-key="Jackbox Party"            data-active="true">Jackbox Party</li>
+          <li data-key="Forgotten Media"          data-active="true">Forgotten Media</li>
+          <li data-key="The Stories We Tell"      data-active="true">The Stories<br/>We Tell</li>
+          <li data-key="Hidden Talents"           data-active="false">Hidden Talents</li>
+          <li data-key="Modern Tall Tales"        data-active="false">Modern Tall<br/>Tales</li>
+          <li data-key="Unscripted"               data-active="false">Unscripted</li>
+          <li data-key="The Bok Project"          data-active="false">The Bok Project</li>
+          <li data-key="Pitch Your Idea"          data-active="true">Pitch Your Idea</li>
+          <li data-key="Curator Discount"         data-active="true">Curator Discount</li>
+        </ul>
+
+        <!-- Bottom glass button -->
+        <div class="tutorial-wrap">
+          <button class="glass-btn glass-gray" id="tutorialBtn" type="button">TUTORIAL</button>
+        </div>
+      </aside>
+    </section>
+  </div>
+</div>
+
+<style>
+  /* =========================================================
+     THEME — same palette as Vault (steel + gunmetal + teal)
+     ========================================================= */
+  :root{
+    --steel: #9aa3ad;             /* light steel */
+    --steel-strong: #7e8791;
+    --gunmetal: #0f141a;          /* page bg */
+    --screen: #15181c;            /* screen fill */
+    --teal: #0bd3d3;              /* accent glow */
+    --frame-thickness: 20px;      /* visible rim */
+    --pulse-max-width: 1260px;    /* wrapper max width */
+    --pulse-min-height: 900px;    /* wrapper min height */
+    --pulse-left-width: 300px;    /* fixed right menu width (naming kept) */
+    --pulse-border-tile-width: 300px; /* hex tile repeat hint */
+  }
+
+  /* =========================================================
+     CORE LAYOUT SIZING (exact rules you provided)
+     ========================================================= */
+  .showcase-wrap{
+    /* Wrapper width  = min(viewport - 48px, 1260px)
+       Wrapper height = max(900px, viewport - 48px) */
+    width: calc(100% - 48px);
+    max-width: var(--pulse-max-width);
+    height: calc(100vh - 48px);
+    min-height: var(--pulse-min-height);
+
+    /* Outer vertical spacing: 28 top/bottom (also sides) */
+    padding: 28px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    background: #000; /* page surround */
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .showcase-content{
+    /* Frame border + padding contribute to the 70px inside start/end */
+    border: var(--frame-thickness) solid rgba(154,163,173,0.75);
+    border-radius: 10px;
+    padding: 22px;
+    box-sizing: border-box;
+    width: 100%;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.06)),
+      radial-gradient(120% 100% at 50% 0%, rgba(255,255,255,0.06), rgba(255,255,255,0) 60%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.2),
+      inset 0 -1px 0 rgba(0,0,0,0.45),
+      0 10px 40px rgba(0,0,0,0.45);
+    position: relative;
+  }
+
+  /* =========================================================
+     HEX TEXTURE (built-in SVG data-URI, no external asset)
+     Used behind borders & menu panel just like the screenshot
+     ========================================================= */
+  .hex-texture{
+    background-image:
+      url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' width='60' height='52' viewBox='0 0 60 52'>\
+        <defs><pattern id='h' width='30' height='26' patternUnits='userSpaceOnUse'>\
+          <polygon points='15,0 30,7 30,19 15,26 0,19 0,7' fill='%2321242a' stroke='%23373c44' stroke-width='2'/>\
+        </pattern></defs><rect width='60' height='52' fill='url(%23h)'/>\
+      </svg>");
+    background-repeat: repeat;
+    background-size: auto;
+  }
+
+  /* =========================================================
+     ENTRY FRAME (left = screen, right = menu)
+     ========================================================= */
+  .entry{
+    display: flex;
+    gap: 18px; /* thin gutter like screenshot bevel */
+    height: 100%;
+  }
+
+  .entry-body{
+    /* Right column outer width = wrapper - left (menu) width */
+    flex: 1;
+    min-width: 0;
+    background: var(--screen);
+    border: 8px solid #121519;  /* inner black rim matching screenshot */
+    border-bottom-width: 18px;  /* thicker bottom ledge */
+    border-left-width: 8px;
+    border-right-width: 8px;
+    border-top-width: 8px;
+    border-radius: 4px;
+    position: relative;
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.05),
+      inset 0 -10px 18px rgba(0,0,0,0.6);
+  }
+
+  /* Usable text width ≈ (wrapper - left) - 8 - 52
+     We simulate with 26px L/R padding = 52 total. */
+  .screen-inner{
+    padding: 18px 26px;
+    color: #e6eaef;
+    font-family: Georgia, serif;
+  }
+
+  .entry-menu{
+    order: 2;
+    width: var(--pulse-left-width); /* 300px exact */
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Menu panel with hex texture */
+  .menu-list{
+    flex: 1;
+    list-style: none;
+    margin: 0;
+    padding: 16px 10px;
+    border-left: 8px solid #1b1f24; /* inner spine */
+    border-radius: 6px;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.55)),
+      rgba(0,0,0,.35);
+    position: relative;
+  }
+  .menu-list:before{
+    content:"";
+    position:absolute; inset:0;
+    z-index:-1;
+    border-radius:6px;
+    filter: brightness(.9);
+  }
+  /* apply hex texture via helper class to the panel itself */
+  .menu-list{ background-blend-mode: overlay; }
+  .menu-list.hex-texture{ }
+
+  /* Menu items — glass buttons (steel) */
+  .menu-list li{
+    margin: 8px 4px;
+    padding: 12px 10px;
+    text-align: center;
+    color: #e8edf2;
+    font-weight: 700;
+    line-height: 1.15;
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+      linear-gradient(180deg, rgba(154,163,173,0.28), rgba(154,163,173,0.14));
+    border: 1px solid rgba(154,163,173,0.45);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.25),
+      inset 0 -10px 18px rgba(0,0,0,0.35),
+      0 4px 10px rgba(0,0,0,0.45);
+    transition: transform .08s ease, box-shadow .15s ease, filter .15s ease;
+  }
+  .menu-list li:hover{
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.28),
+      inset 0 -12px 20px rgba(0,0,0,0.4),
+      0 6px 14px rgba(0,0,0,0.5);
+  }
+  /* Active state glow on selection */
+  .menu-list li.is-current{
+    outline: 0;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      inset 0 -12px 20px rgba(11,211,211,0.15),
+      0 0 0 2px rgba(11,211,211,0.25),
+      0 0 18px rgba(11,211,211,0.35);
+  }
+  /* Inactive/locked sections (greyed/dimmed) */
+  .menu-list li[data-active="false"]{
+    cursor: not-allowed;
+    filter: grayscale(100%) brightness(0.6) contrast(0.9);
+    color: #a9b0b6;
+    opacity: .75;
+  }
+
+  /* Bottom TUTORIAL button (glass, gray variant) */
+  .tutorial-wrap{
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+  }
+  .glass-btn{
+    appearance: none;
+    border: 0;
+    padding: 12px 18px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    border-radius: 8px;
+    color: #f1f5f9;
+    cursor: pointer;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+      linear-gradient(180deg, rgba(120,126,136,0.35), rgba(120,126,136,0.18));
+    border: 1px solid rgba(120,126,136,0.55);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.25),
+      inset 0 -12px 20px rgba(0,0,0,0.4),
+      0 6px 16px rgba(0,0,0,0.5);
+    position: relative;
+  }
+  .glass-btn:after{
+    content:"";
+    position:absolute; inset:auto 10px -8px auto; width: 64px; height: 10px;
+    background: linear-gradient(90deg, rgba(0,0,0,.4), rgba(0,0,0,0));
+    clip-path: polygon(0 0, 100% 0, 92% 100%, 0% 100%);
+    border-bottom-left-radius: 4px;
+  }
+
+  /* Apply the hex texture class where needed */
+  .menu-list{ background-image:
+    linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.55)),
+    url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' width='60' height='52' viewBox='0 0 60 52'>\
+        <defs><pattern id='h' width='30' height='26' patternUnits='userSpaceOnUse'>\
+          <polygon points='15,0 30,7 30,19 15,26 0,19 0,7' fill='%231c2025' stroke='%23353a42' stroke-width='2'/>\
+        </pattern></defs><rect width='60' height='52' fill='url(%23h)'/>\
+      </svg>");
+    background-repeat: repeat;
+    background-size: auto;
+  }
+</style>
+
+<script>
+  // Simple content map (replace with your real content/embeds)
+  const contentByKey = {
+    "Greenlight": "<h2>Greenlight</h2><p>Pitch-ready concepts, voting & feedback.</p>",
+    "The Chrono-Viewer Database": "<h2>The Chrono-Viewer Database</h2><p>Browse timelines, entries, and curation notes.</p>",
+    "Simulated": "<h2>Simulated</h2><p>Experiments, renders, and simulation logs.</p>",
+    "Jackbox Party": "<h2>Jackbox Party</h2><p>Community party nights & highlights.</p>",
+    "Forgotten Media": "<h2>Forgotten Media</h2><p>Restorations & deep dives.</p>",
+    "The Stories We Tell": "<h2>The Stories We Tell</h2><p>Member narratives & spotlights.</p>",
+    "Pitch Your Idea": "<h2>Pitch Your Idea</h2><p>Submit your concept to the curators.</p>",
+    "Curator Discount": "<h2>Curator Discount</h2><p>Exclusive codes & perks for members.</p>"
+    // Inactive ones intentionally omitted
+  };
+
+  const menu = document.getElementById('menu');
+  const screen = document.getElementById('screen');
+
+  // Mark first active item as current
+  (function initCurrent(){
+    const firstActive = menu.querySelector('li[data-active="true"]');
+    if(firstActive){ firstActive.classList.add('is-current'); screen.querySelector('.screen-inner').innerHTML = contentByKey[firstActive.dataset.key] || screen.querySelector('.screen-inner').innerHTML; }
+  })();
+
+  menu.addEventListener('click', (e)=>{
+    const li = e.target.closest('li');
+    if(!li) return;
+    if(li.dataset.active !== "true") return; // locked
+    // update selected
+    menu.querySelectorAll('li.is-current').forEach(el => el.classList.remove('is-current'));
+    li.classList.add('is-current');
+    // swap content
+    const html = contentByKey[li.dataset.key] || `<h2>${li.dataset.key}</h2><p>Content coming soon.</p>`;
+    screen.querySelector('.screen-inner').innerHTML = html;
+  });
+
+  // Tutorial button (demo)
+  document.getElementById('tutorialBtn').addEventListener('click', ()=>{
+    screen.querySelector('.screen-inner').innerHTML =
+      "<h2>Tutorial</h2><p>Use the right-side glass buttons to switch sections. Greyed items are not yet active.</p>";
+  });
+</script>
