@@ -8,6 +8,78 @@
         <div class="screen-inner">
           <h2>Welcome to The Curator’s Club</h2>
           <p>Select a section on the right to load content here.</p>
+
+          <!-- Embedded Greenlight module (hidden by default; shown when selected) -->
+          <div id="greenlight" hidden>
+            <nav class="phase-nav" aria-label="Greenlight phases">
+              <button class="tab" data-go="instructions">Instructions</button>
+              <button class="tab" data-go="vote">Voting</button>
+              <button class="tab" data-go="results">Results</button>
+            </nav>
+
+            <!-- Instructions -->
+            <section class="instr" data-phase="instructions" hidden>
+              <div class="instr-head">
+                <h2 class="results-title" style="margin:0">Greenlight — Instructions</h2>
+                <button class="btn" id="instrToggle" aria-pressed="false">Minimize</button>
+              </div>
+              <p class="results-sub">Welcome! New curators can review what's available and how to participate.</p>
+              <ol>
+                <li>Browse all projects in the right menu’s relevant sections.</li>
+                <li>Go to Voting and rank up to five favorites (1st to 5th, one per rank).</li>
+                <li>Visit Results anytime to see the overall standings.</li>
+              </ol>
+            </section>
+
+            <!-- Voting -->
+            <section class="vote" data-phase="vote" hidden>
+              <div class="vote-wrap">
+                <div class="vote-left">
+                  <h2 class="vote-title">Curator Club — Greenlight Voting</h2>
+                  <p class="vote-sub">Rank up to five favorites. 1st = 5 pts, 2nd = 4, 3rd = 3, 4th = 2, 5th = 1. Only one selection per column.</p>
+                  <table class="vote-grid" aria-describedby="voteHelp">
+                    <thead>
+                      <tr>
+                        <th class="sr" id="voteHelp">Select at most one per column</th>
+                        <th></th>
+                        <th class="rot">1st</th>
+                        <th class="rot">2nd</th>
+                        <th class="rot">3rd</th>
+                        <th class="rot">4th</th>
+                        <th class="rot">5th</th>
+                      </tr>
+                    </thead>
+                    <tbody id="voteBody"></tbody>
+                  </table>
+                  <div class="actions" style="margin-top:14px">
+                    <div class="ledge">
+                      <button class="btn btn-primary" id="castBtn" type="button">Cast Your Ballot</button>
+                    </div>
+                    <button class="btn" id="toResultsBtn" type="button">View Results</button>
+                  </div>
+                </div>
+                <div class="vote-right">
+                  <div class="info">Make your selections on the left. Each rank can be used once.</div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Results -->
+            <section class="results" data-phase="results" hidden>
+              <div class="results-wrap">
+                <h2 class="results-title">Greenlight Results</h2>
+                <p class="results-sub">Ranked by total points. Right side shows points and share of total. Bars are proportional to the top project.</p>
+                <div id="results" class="results-list" aria-live="polite"></div>
+
+                <div class="actions">
+                  <div class="ledge">
+                    <button class="btn btn-primary" id="changeBtn" type="button">Change Your Vote</button>
+                  </div>
+                  <button class="btn" id="tutorialBtnGL" type="button" aria-pressed="false">TUTORIAL</button>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
 
@@ -264,12 +336,44 @@
     background-repeat: repeat;
     background-size: auto;
   }
+
+  /* ======================= Greenlight (scoped) ======================= */
+  #greenlight .phase-nav{ display:flex; gap:10px; margin: 2px 0 14px; }
+  #greenlight .phase-nav .tab{ appearance:none; border:1px solid rgba(154,163,173,.55); background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)); color:#e6eaef; border-radius:8px; padding:8px 12px; font-weight:800; cursor:pointer; }
+  #greenlight .phase-nav .tab[aria-current="true"]{ box-shadow: 0 0 0 2px rgba(11,211,211,.25), 0 0 14px rgba(11,211,211,.35); }
+  #greenlight .btn{ appearance:none; border:0; padding:12px 18px; font-weight:800; letter-spacing:.5px; border-radius:8px; color:#f1f5f9; cursor:pointer; background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)), linear-gradient(180deg, rgba(120,126,136,0.35), rgba(120,126,136,0.18)); border: 1px solid rgba(120,126,136,0.55); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -12px 20px rgba(0,0,0,0.4), 0 6px 16px rgba(0,0,0,0.5); }
+  #greenlight .btn-primary{ background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02)), linear-gradient(180deg, rgba(154,163,173,0.5), rgba(154,163,173,0.22)); border:1px solid rgba(154,163,173,0.65); color:#111; text-shadow: 0 1px 0 rgba(255,255,255,.35); }
+  #greenlight .vote-wrap{ flex:1; display:flex; gap:40px; }
+  #greenlight .vote-left{ flex: 0 1 620px; }
+  #greenlight .vote-right{ flex:1; display:flex; align-items:center; justify-content:center; color:#e8edf2; }
+  #greenlight .vote-right .info{ max-width: 360px; text-align:center; font-weight:800; font-size:28px; line-height:1.25; }
+  #greenlight .vote-title{ font-size:28px; font-weight:800; margin:0 0 8px; }
+  #greenlight .vote-sub{ opacity:.8; margin:0 0 18px; font-size:14px; }
+  #greenlight .vote-grid{ border-collapse:collapse; width:100%; }
+  #greenlight .vote-grid th, #greenlight .vote-grid td{ padding:8px 10px; }
+  #greenlight .vote-grid thead th{ text-align:center; font-weight:800; color:#e8edf2; }
+  #greenlight .proj-name{ font-weight:800; text-align:right; white-space:nowrap; }
+  #greenlight .rot{ writing-mode: vertical-rl; transform: rotate(180deg); font-weight:800; opacity:.85; }
+  #greenlight .cell{ text-align:center; }
+  #greenlight .rankbox{ width:18px; height:18px; appearance:none; -webkit-appearance:none; border:2px solid #d5d8dc; border-radius:3px; display:inline-block; background:#2a2f36; box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(0,0,0,.5); cursor:pointer; }
+  #greenlight .rankbox:checked{ background: linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,0)); border-color:#fff; box-shadow: 0 0 0 2px rgba(255,255,255,.15), 0 0 12px rgba(255,255,255,.18); }
+  #greenlight .rankbox:focus{ outline:2px solid rgba(11,211,211,0.5); outline-offset:2px; }
+  #greenlight .results-wrap{ flex:1; width:100%; }
+  #greenlight .results-title{ font-size:28px; font-weight:800; margin:0 0 8px; }
+  #greenlight .results-sub{ opacity:.8; margin:0 0 18px; font-size:14px; }
+  #greenlight .results-list{ display:flex; flex-direction:column; gap:16px; }
+  #greenlight .result-item{ position:relative; padding:6px 14px; height:38px; display:flex; align-items:center; border-radius:4px; overflow:hidden; }
+  #greenlight .bar-fill{ position:absolute; inset:0 auto 0 0; width:0%; transition:width .6s ease; }
+  #greenlight .bar-label{ position:relative; font-weight:800; z-index:1; color:#fff; text-shadow: 0 1px 0 rgba(0,0,0,.6); }
+  #greenlight .bar-stats{ position:absolute; right:12px; z-index:1; font-weight:800; color:#fff; text-shadow: 0 1px 0 rgba(0,0,0,.6); }
+  #greenlight .actions{ margin-top:auto; display:flex; gap:18px; align-items:center; }
+  #greenlight .actions .ledge{ flex:1; height:28px; background: linear-gradient(180deg, #9aa3ad, #676f78); border-radius:3px; box-shadow: inset 0 2px 0 rgba(255,255,255,.25), inset 0 -2px 0 rgba(0,0,0,0.45); display:flex; align-items:center; justify-content:center; color:#1b1f24; font-weight:800; font-size:22px; }
+  #greenlight .sr{ position:absolute; left:-9999px; }
 </style>
 
 <script>
-  // Simple content map (replace with your real content/embeds)
+  // Simple content map (non-Greenlight sections)
   const contentByKey = {
-    "Greenlight": "<h2>Greenlight</h2><p>Pitch-ready concepts, voting & feedback.</p>",
     "The Chrono-Viewer Database": "<h2>The Chrono-Viewer Database</h2><p>Browse timelines, entries, and curation notes.</p>",
     "Simulated": "<h2>Simulated</h2><p>Experiments, renders, and simulation logs.</p>",
     "Jackbox Party": "<h2>Jackbox Party</h2><p>Community party nights & highlights.</p>",
@@ -282,11 +386,32 @@
 
   const menu = document.getElementById('menu');
   const screen = document.getElementById('screen');
+  const inner = screen.querySelector('.screen-inner');
+  const gl = document.getElementById('greenlight');
+
+  // Create a content wrapper and move existing content (except #greenlight) into it
+  const clubContent = document.createElement('div');
+  clubContent.id = 'clubContent';
+  while(inner.firstChild && inner.firstChild !== gl){ clubContent.appendChild(inner.firstChild); }
+  inner.insertBefore(clubContent, gl);
+
+  function showGreenlight(show){ gl.hidden = !show; clubContent.hidden = show; }
 
   // Mark first active item as current
   (function initCurrent(){
     const firstActive = menu.querySelector('li[data-active="true"]');
-    if(firstActive){ firstActive.classList.add('is-current'); screen.querySelector('.screen-inner').innerHTML = contentByKey[firstActive.dataset.key] || screen.querySelector('.screen-inner').innerHTML; }
+    const hashPhase = (location.hash||'').replace('#','');
+    const isGLHash = ['instructions','vote','results'].includes(hashPhase);
+    if(firstActive){
+      firstActive.classList.add('is-current');
+      if(firstActive.dataset.key === 'Greenlight' || isGLHash){
+        showGreenlight(true);
+      }else{
+        showGreenlight(false);
+        const html = contentByKey[firstActive.dataset.key] || clubContent.innerHTML;
+        clubContent.innerHTML = html;
+      }
+    }
   })();
 
   menu.addEventListener('click', (e)=>{
@@ -297,13 +422,135 @@
     menu.querySelectorAll('li.is-current').forEach(el => el.classList.remove('is-current'));
     li.classList.add('is-current');
     // swap content
-    const html = contentByKey[li.dataset.key] || `<h2>${li.dataset.key}</h2><p>Content coming soon.</p>`;
-    screen.querySelector('.screen-inner').innerHTML = html;
+    if(li.dataset.key === 'Greenlight'){
+      showGreenlight(true);
+    }else{
+      showGreenlight(false);
+      const html = contentByKey[li.dataset.key] || `<h2>${li.dataset.key}</h2><p>Content coming soon.</p>`;
+      clubContent.innerHTML = html;
+    }
   });
 
-  // Tutorial button (demo)
+  // Tutorial button (demo) — shows basic site tutorial (not GL)
   document.getElementById('tutorialBtn').addEventListener('click', ()=>{
-    screen.querySelector('.screen-inner').innerHTML =
-      "<h2>Tutorial</h2><p>Use the right-side glass buttons to switch sections. Greyed items are not yet active.</p>";
+    showGreenlight(false);
+    clubContent.innerHTML = "<h2>Tutorial</h2><p>Use the right-side glass buttons to switch sections. Greyed items are not yet active.</p>";
   });
+
+  // ======================= Greenlight module logic =======================
+  (function(){
+    const PHASES = ['instructions','vote','results'];
+    const KEY_PHASE = 'gl:phase';
+    const KEY_INSTR_MIN = 'gl:instr:min';
+    const ROOT = document.getElementById('greenlight');
+    function setPhase(p){
+      if(!PHASES.includes(p)) p = 'instructions';
+      ROOT.querySelectorAll('[data-phase]').forEach(sec=>{ sec.hidden = sec.getAttribute('data-phase') !== p; });
+      ROOT.querySelectorAll('.phase-nav .tab').forEach(btn=> btn.setAttribute('aria-current', btn.dataset.go===p));
+      if(location.hash !== '#'+p) history.replaceState(null,'','#'+p);
+      try{ localStorage.setItem(KEY_PHASE, p); }catch{}
+      if(p==='results') renderResults();
+    }
+    ROOT.querySelector('.phase-nav').addEventListener('click', (e)=>{ const b = e.target.closest('[data-go]'); if(!b) return; setPhase(b.dataset.go); });
+    // Show GL if URL hash points to it
+    const initialPhase = (location.hash||'').replace('#','');
+    if(PHASES.includes(initialPhase)) showGreenlight(true);
+    setPhase(initialPhase || localStorage.getItem(KEY_PHASE) || 'instructions');
+
+    // Instructions toggle
+    (function(){
+      const wrap = ROOT.querySelector('[data-phase="instructions"]');
+      const toggle = ROOT.querySelector('#instrToggle');
+      let min = localStorage.getItem(KEY_INSTR_MIN) === '1';
+      function apply(){ wrap.style.display = min ? 'none' : ''; toggle.setAttribute('aria-pressed', String(min)); toggle.textContent = min ? 'Expand' : 'Minimize'; }
+      apply();
+      toggle.addEventListener('click', ()=>{ min = !min; apply(); try{ localStorage.setItem(KEY_INSTR_MIN, min?'1':'0'); }catch{} });
+    })();
+
+    // Shared data
+    const projects = [
+      'Forgotten Media','Hidden Talents','Interstellar','Jackbox Party','Modern Tall Tales','Simulated','The Bok Project','The Chrono-Viewer','The Dire Realm','The Order of Chaos','The School of Media','The Stories We Tell','Unscripted'
+    ];
+    const ranks = [
+      { key: 'r1', label: '1st', points: 5 },
+      { key: 'r2', label: '2nd', points: 4 },
+      { key: 'r3', label: '3rd', points: 3 },
+      { key: 'r4', label: '4th', points: 2 },
+      { key: 'r5', label: '5th', points: 1 }
+    ];
+    const STORAGE_KEY = 'greenlightScores';
+    const DEMO = {
+      'The Chrono-Viewer': 1000,
+      'Jackbox Party': 900,
+      'The Order of Chaos': 800,
+      'Simulated': 700,
+      'The Dire Realm': 600,
+      'Forgotten Media': 500,
+      'Hidden Talents': 400,
+      'Interstellar': 300
+    };
+    const COLORS = {
+      'The Chrono-Viewer': '#198c1e',
+      'Jackbox Party': '#0f1f84',
+      'The Order of Chaos': '#7b7a15',
+      'Simulated': '#7c0c0c',
+      'The Dire Realm': '#7a1183',
+      'Forgotten Media': '#c27b16',
+      'Hidden Talents': '#1aa5a5',
+      'Interstellar': '#bfc3c7'
+    };
+
+    // Build voting table
+    (function buildVoting(){
+      const tbody = document.getElementById('voteBody'); if(!tbody) return;
+      projects.forEach((name, rowIdx)=>{
+        const tr = document.createElement('tr');
+        const tdName = document.createElement('td'); tdName.className='proj-name'; tdName.textContent = name; tr.appendChild(tdName);
+        ranks.forEach(r=>{
+          const td = document.createElement('td'); td.className='cell';
+          const id = `${r.key}-${rowIdx}`;
+          td.innerHTML = `<input class=\"rankbox\" type=\"checkbox\" data-col=\"${r.key}\" data-project=\"${name}\" id=\"${id}\">`;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      // Only one checkbox per column
+      tbody.addEventListener('change', (e)=>{ const el = e.target; if(!el.matches('.rankbox')) return; if(el.checked){ const col = el.getAttribute('data-col'); tbody.querySelectorAll(`.rankbox[data-col=\"${col}\"]`).forEach(box=>{ if(box!==el) box.checked=false; }); } });
+      // Cast ballot
+      document.getElementById('castBtn').addEventListener('click', ()=>{
+        const selections = {}; ranks.forEach(r=>{ const chosen = tbody.querySelector(`.rankbox[data-col=\"${r.key}\"]:checked`); if(chosen){ selections[r.key] = chosen.getAttribute('data-project'); }});
+        if(Object.keys(selections).length===0){ alert('Please make at least one selection before casting your ballot.'); return; }
+        const scores = (()=>{ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); }catch{ return {}; } })();
+        projects.forEach(p=>{ if(!(p in scores)) scores[p]=0; });
+        ranks.forEach(r=>{ if(selections[r.key]) scores[selections[r.key]] += r.points; });
+        try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(scores)); }catch{}
+        alert('Your ballot has been recorded. Thank you!');
+        tbody.querySelectorAll('.rankbox:checked').forEach(b=> b.checked=false);
+        setPhase('results');
+      });
+      document.getElementById('toResultsBtn').addEventListener('click', ()=> setPhase('results'));
+    })();
+
+    // Render results
+    function renderResults(){
+      const resultsEl = document.getElementById('results'); if(!resultsEl) return; resultsEl.innerHTML='';
+      const stored = (()=>{ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); }catch{ return null; } })();
+      const scores = { ...DEMO, ...(stored || {}) };
+      const entries = Object.entries(scores).filter(([n,v])=> typeof v === 'number').sort((a,b)=> b[1]-a[1]);
+      const total = entries.reduce((s,[,v])=> s+v, 0) || 1;
+      const top = entries.length ? entries[0][1] : 1;
+      entries.forEach(([name, pts])=>{
+        const pct = (pts/total*100);
+        const row = document.createElement('div'); row.className='result-item';
+        const fill = document.createElement('div'); fill.className='bar-fill'; fill.style.background = COLORS[name] || '#4b5563'; fill.style.width = Math.max(4, (pts/top*100))+'%';
+        const label = document.createElement('div'); label.className='bar-label'; label.textContent = name;
+        const stats = document.createElement('div'); stats.className='bar-stats'; stats.textContent = `${pts} - ${pct.toFixed(1)}%`;
+        row.appendChild(fill); row.appendChild(label); row.appendChild(stats); resultsEl.appendChild(row);
+      });
+    }
+
+    // Buttons on results
+    document.getElementById('changeBtn').addEventListener('click', ()=> setPhase('vote'));
+    document.getElementById('tutorialBtnGL').addEventListener('click', ()=> setPhase('instructions'));
+  })();
 </script>
