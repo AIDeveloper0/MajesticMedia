@@ -1,0 +1,226 @@
+<!-- Curator Club • Greenlight Tab (Part 2: Voting) -->
+<!-- Uses same frame sizing and Vault color theme -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Curator Club – Greenlight Voting</title>
+  <style>
+    /* Theme borrowed from Vault */
+    :root{
+      --steel: #9aa3ad;
+      --steel-strong: #7e8791;
+      --gunmetal: #0f141a;
+      --screen: #15181c;
+      --teal: #0bd3d3;
+      --frame-thickness: 20px;
+      --pulse-max-width: 1260px;   /* frame width matches other pages */
+      --pulse-min-height: 900px;   /* frame height matches other pages */
+      --pulse-left-width: 300px;   /* right menu fixed width */
+    }
+
+    /* Frame wrapper identical to Curators Club */
+    .showcase-wrap{ width: calc(100% - 48px); max-width: var(--pulse-max-width); height: calc(100vh - 48px); min-height: var(--pulse-min-height); padding:28px; margin:0 auto; box-sizing:border-box; background:#000; display:flex; align-items:stretch; justify-content:center; }
+    .showcase-content{ border:var(--frame-thickness) solid rgba(154,163,173,0.75); border-radius:10px; padding:22px; box-sizing:border-box; width:100%; background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.06)), radial-gradient(120% 100% at 50% 0%, rgba(255,255,255,0.06), rgba(255,255,255,0) 60%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.45), 0 10px 40px rgba(0,0,0,0.45); position:relative; }
+
+    .entry{ display:flex; gap:18px; height:100%; }
+    .entry-body{ flex:1; min-width:0; background:var(--screen); border:8px solid #121519; border-bottom-width:18px; border-radius:4px; position:relative; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), inset 0 -10px 18px rgba(0,0,0,0.6); display:flex; flex-direction:column; }
+    .screen-inner{ padding:18px 26px 0 26px; color:#e6eaef; font-family: Georgia, serif; display:flex; gap:38px; flex:1; }
+
+    /* Right menu (same list as other pages) */
+    .entry-menu{ order:2; width:var(--pulse-left-width); display:flex; flex-direction:column; }
+    .menu-list{ flex:1; list-style:none; margin:0; padding:16px 10px; border-left:8px solid #1b1f24; border-radius:6px; background: linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.55)), rgba(0,0,0,.35); }
+    .menu-list li{ margin:8px 4px; padding:12px 10px; text-align:center; color:#e8edf2; font-weight:700; line-height:1.15; border-radius:8px; cursor:pointer; user-select:none; background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)), linear-gradient(180deg, rgba(154,163,173,0.28), rgba(154,163,173,0.14)); border:1px solid rgba(154,163,173,0.45); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -10px 18px rgba(0,0,0,0.35), 0 4px 10px rgba(0,0,0,0.45); }
+    .menu-list li[data-active="false"]{ cursor:not-allowed; filter:grayscale(100%) brightness(.6) contrast(.9); color:#a9b0b6; opacity:.75; }
+
+    /* Voting layout */
+    .vote-wrap{ flex:1; display:flex; gap:40px; }
+    .vote-left{ flex: 0 1 620px; }
+    .vote-right{ flex:1; display:flex; align-items:center; justify-content:center; color:#e8edf2; }
+    .vote-right .info{ max-width: 360px; text-align:center; font-weight:800; font-size:28px; line-height:1.25; }
+
+    .vote-title{ font-size:28px; font-weight:800; margin:0 0 8px; }
+    .vote-sub{ opacity:.8; margin:0 0 18px; font-size:14px; }
+
+    /* Grid: project names + 5 columns */
+    .vote-grid{ border-collapse:collapse; width:100%; }
+    .vote-grid th, .vote-grid td{ padding:8px 10px; }
+    .vote-grid thead th{ text-align:center; font-weight:800; color:#e8edf2; }
+    .proj-name{ font-weight:800; text-align:right; white-space:nowrap; }
+
+    /* Column headers rotated */
+    .rot{ writing-mode: vertical-rl; transform: rotate(180deg); font-weight:800; opacity:.85; }
+
+    /* Square checkbox styling */
+    .cell{ text-align:center; }
+    .rankbox{ width:18px; height:18px; appearance:none; -webkit-appearance:none; border:2px solid #d5d8dc; border-radius:3px; display:inline-block; background:#2a2f36; box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(0,0,0,.5); cursor:pointer; }
+    .rankbox:checked{ background: linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,0)); border-color:#fff; box-shadow: 0 0 0 2px rgba(255,255,255,.15), 0 0 12px rgba(255,255,255,.18); }
+    .rankbox:focus{ outline:2px solid rgba(11,211,211,0.5); outline-offset:2px; }
+
+    /* Bottom action bar */
+    .vote-actions{ margin-top:auto; display:flex; gap:18px; align-items:center; }
+    .vote-actions .ledge{ flex:1; height:28px; background: linear-gradient(180deg, #9aa3ad, #676f78); border-radius:3px; box-shadow: inset 0 2px 0 rgba(255,255,255,.25), inset 0 -2px 0 rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; color:#1b1f24; font-weight:800; font-size:22px; }
+    .btn{ appearance:none; border:0; padding:12px 18px; font-weight:800; letter-spacing:.5px; border-radius:8px; color:#f1f5f9; cursor:pointer; background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)), linear-gradient(180deg, rgba(120,126,136,0.35), rgba(120,126,136,0.18)); border: 1px solid rgba(120,126,136,0.55); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -12px 20px rgba(0,0,0,0.4), 0 6px 16px rgba(0,0,0,0.5); }
+    .btn:active{ transform: translateY(1px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -8px 16px rgba(0,0,0,0.45), 0 2px 10px rgba(0,0,0,0.45); }
+    .btn-primary{ background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02)), linear-gradient(180deg, rgba(154,163,173,0.5), rgba(154,163,173,0.22)); border:1px solid rgba(154,163,173,0.65); color:#111; text-shadow: 0 1px 0 rgba(255,255,255,.35); }
+
+    /* Small helper */
+    .sr{ position:absolute; left:-9999px; }
+
+    /* Responsive */
+    @media (max-width: 1100px){ .vote-right{ display:none; } }
+  </style>
+</head>
+<body>
+  <div class="showcase-wrap">
+    <div class="showcase-content">
+      <section class="entry">
+        <!-- Left: screen -->
+        <div class="entry-body" id="screen">
+          <div class="screen-inner">
+            <div class="vote-wrap">
+              <div class="vote-left">
+                <h2 class="vote-title">Curator Club • Greenlight Voting</h2>
+                <p class="vote-sub">Rank up to five favorites. 1st = 5 pts, 2nd = 4, 3rd = 3, 4th = 2, 5th = 1. Only one selection per column.</p>
+
+                <table class="vote-grid" aria-label="Projects ranked voting">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th><span class="rot">1st Choice</span></th>
+                      <th><span class="rot">2nd Choice</span></th>
+                      <th><span class="rot">3rd Choice</span></th>
+                      <th><span class="rot">4th Choice</span></th>
+                      <th><span class="rot">5th Choice</span></th>
+                    </tr>
+                  </thead>
+                  <tbody id="voteBody"></tbody>
+                </table>
+
+                <div class="vote-actions">
+                  <div class="ledge" id="castArea">
+                    <button class="btn btn-primary" id="castBtn" type="button">Cast Ballot</button>
+                  </div>
+                  <button class="btn" id="tutorialBtn" type="button" aria-pressed="false">TUTORIAL</button>
+                </div>
+              </div>
+
+              <aside class="vote-right">
+                <div class="info">Information explaining the voting process</div>
+              </aside>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: menu -->
+        <aside class="entry-menu" aria-label="Sections">
+          <ul class="menu-list" id="menu">
+            <li data-key="Greenlight"               data-active="true">Greenlight</li>
+            <li data-key="The Chrono-Viewer Database" data-active="true">Chrono-Viewer<br/>Database</li>
+            <li data-key="Simulated"                data-active="true">Simulated</li>
+            <li data-key="Jackbox Party"            data-active="true">Jackbox Party</li>
+            <li data-key="Forgotten Media"          data-active="true">Forgotten Media</li>
+            <li data-key="The Stories We Tell"      data-active="true">The Stories<br/>We Tell</li>
+            <li data-key="Hidden Talents"           data-active="false">Hidden Talents</li>
+            <li data-key="Modern Tall Tales"        data-active="false">Modern Tall<br/>Tales</li>
+            <li data-key="Unscripted"               data-active="false">Unscripted</li>
+            <li data-key="The Bok Project"          data-active="false">The Bok Project</li>
+            <li data-key="Pitch Your Idea"          data-active="true">Pitch Your Idea</li>
+            <li data-key="Curator Discount"         data-active="true">Curator Discount</li>
+          </ul>
+        </aside>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // Projects (alphabetical)
+    const projects = [
+      'Forgotten Media',
+      'Hidden Talents',
+      'Interstellar',
+      'Jackbox Party',
+      'Modern Tall Tales',
+      'Simulated',
+      'The Bok Project',
+      'The Chrono-Viewer',
+      'The Dire Realm',
+      'The Order of Chaos',
+      'The School of Media',
+      'The Stories We Tell',
+      'Unscripted'
+    ];
+
+    const ranks = [
+      { key: 'r1', label: '1st', points: 5 },
+      { key: 'r2', label: '2nd', points: 4 },
+      { key: 'r3', label: '3rd', points: 3 },
+      { key: 'r4', label: '4th', points: 2 },
+      { key: 'r5', label: '5th', points: 1 }
+    ];
+
+    // Build table body
+    const tbody = document.getElementById('voteBody');
+    projects.forEach((name, rowIdx) => {
+      const tr = document.createElement('tr');
+      const tdName = document.createElement('td');
+      tdName.className = 'proj-name';
+      tdName.textContent = name;
+      tr.appendChild(tdName);
+
+      ranks.forEach((r, colIdx) => {
+        const td = document.createElement('td');
+        td.className = 'cell';
+        const id = `${r.key}-${rowIdx}`;
+        td.innerHTML = `<input class="rankbox" type="checkbox" data-col="${r.key}" data-project="${name}" id="${id}">`;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+
+    // Only one checkbox per column rule
+    tbody.addEventListener('change', (e) => {
+      const el = e.target;
+      if(!el.matches('.rankbox')) return;
+      if(el.checked){
+        const col = el.getAttribute('data-col');
+        [...tbody.querySelectorAll(`.rankbox[data-col="${col}"]`)].forEach(box => { if(box !== el) box.checked = false; });
+      }
+    });
+
+    // Cast ballot handler
+    document.getElementById('castBtn').addEventListener('click', () => {
+      const selections = {};
+      ranks.forEach(r => {
+        const chosen = tbody.querySelector(`.rankbox[data-col="${r.key}"]:checked`);
+        if(chosen){ selections[r.key] = chosen.getAttribute('data-project'); }
+      });
+
+      if(Object.keys(selections).length === 0){
+        alert('Please make at least one selection before casting your ballot.');
+        return;
+      }
+
+      // Aggregate in localStorage to simulate global totals
+      const KEY = 'greenlightScores';
+      const scores = JSON.parse(localStorage.getItem(KEY) || '{}');
+      Object.values(projects).forEach(p => { if(!(p in scores)) scores[p] = 0; });
+      ranks.forEach(r => {
+        if(selections[r.key]){ scores[selections[r.key]] += r.points; }
+      });
+      localStorage.setItem(KEY, JSON.stringify(scores));
+
+      // Simple confirmation
+      alert('Your ballot has been recorded. Thank you!');
+
+      // Reset selections
+      tbody.querySelectorAll('.rankbox:checked').forEach(b => b.checked = false);
+    });
+
+    // Tutorial button is in "up" position (aria-pressed=false). No behavior here.
+  </script>
+</body>
+</html>
+
