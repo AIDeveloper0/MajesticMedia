@@ -10,7 +10,8 @@
   <style>
     :root{
       /* ======= THEME (steel vs showcase ruby) ======= */
-      --gutter-texture-url: url("https://images.unsplash.com/photo-1544465544-1b71dceff6a6?q=80&w=1600&auto=format&fit=crop"); /* brushed steel texture */
+      /* Use the provided grey texture so the grid gutters match Showcase's approach */
+      --gutter-texture-url: url("https://static1.squarespace.com/static/6891a6f0dcd941394db83fc9/t/68baf324c2db6c08b01e1cc3/1757082404168/aa2cacc4-bc98-4eb1-9132-6475ba52362a.jpeg");
       --steel: #9aa3ad;           /* light steel */
       --gunmetal: #0f141a;        /* page background */
       --teal: #0bd3d3;            /* accent (safe LEDs) */
@@ -75,12 +76,17 @@
       border-radius: 6px;
     }
 
-    /* header */
+    /* header: use same provided grey texture as gutters */
     .vault-head{
       display:flex; align-items:center; justify-content:space-between; gap:16px;
       margin-bottom:14px;
+      background: var(--gutter-texture-url) center/600px repeat;
+      border-radius: 6px;
+      padding: 12px 14px;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.45);
+      border: 1px solid rgba(0,0,0,0.18);
     }
-    .vault-title{ font-size: clamp(22px, 3vw, 32px); font-weight: 800; letter-spacing: .3px; }
+    .vault-title{ font-size: clamp(22px, 3vw, 32px); font-weight: 800; letter-spacing: .3px; color:#fff; text-shadow: 0 2px 0 rgba(0,0,0,0.45); }
     .vault-sub{ opacity:.8; font-size:14px; }
 
     /* vendor hint chip */
@@ -174,7 +180,7 @@
           <div class="vault-title">The Vault</div>
           <div class="vault-sub">Same layout as Showcase • Steel skin • Divider walls like an open safe</div>
         </div>
-        <div class="vendor-chip" title="Recommended stack for fulfillment">Optimized for Shopify + Printful</div>
+        <div class="vendor-chip" title="Recommended stack for fulfillment">Optimized for Squarespace + Printful</div>
       </header>
 
       <!-- PRODUCT GRID (12 items) -->
