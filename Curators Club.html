@@ -38,9 +38,9 @@
                   <h2 class="vote-title">Curator Club — Greenlight Voting</h2>
                   <p class="vote-sub">Rank up to five favorites. 1st = 5 pts, 2nd = 4, 3rd = 3, 4th = 2, 5th = 1. Only one selection per column.</p>
                   <table class="vote-grid" aria-describedby="voteHelp">
+                    <caption id="voteHelp" class="sr">Select at most one per column</caption>
                     <thead>
                       <tr>
-                        <th class="sr" id="voteHelp">Select at most one per column</th>
                         <th></th>
                         <th class="rot">1st</th>
                         <th class="rot">2nd</th>
@@ -75,12 +75,51 @@
                   <div class="ledge">
                     <button class="btn btn-primary" id="changeBtn" type="button">Change Your Vote</button>
                   </div>
-                  <button class="btn" id="tutorialBtnGL" type="button" aria-pressed="false">TUTORIAL</button>
                 </div>
               </div>
             </section>
           </div>
         </div>
+
+        <!-- Tutorial overlay + tiny checkbox toggle -->
+        <div class="tutorial-overlay" id="ccTutorial" aria-live="polite" aria-label="Curator's Club tutorial">
+          <div class="tutorial-head">
+            <h3 class="tutorial-title">Curator's Club – Tutorial</h3>
+          </div>
+          <div class="tutorial-body">
+            <div class="tutorial-slide" data-idx="0">
+              <h4>Welcome</h4>
+              <p>This quick overlay explains the right-side tabs and Greenlight flow.</p>
+              <p>Browse the sections on the right. Active ones glow; dim ones are locked for now.</p>
+            </div>
+            <div class="tutorial-slide" data-idx="1">
+              <h4>Greenlight</h4>
+              <p>Select <strong>Greenlight</strong> to enter the voting flow. Use the tabs at the top (Instructions, Voting, Results) to move between phases as needed.</p>
+              <p>You may replace this text with images later. Drop JPEGs into your project and place them here; the layout scales to fit.</p>
+            </div>
+            <div class="tutorial-slide" data-idx="2">
+              <h4>Voting</h4>
+              <p>Rank up to five favorites: 1st through 5th (one per column). Submit to record your ballot.</p>
+            </div>
+            <div class="tutorial-slide" data-idx="3">
+              <h4>Results</h4>
+              <p>See standings by total points. Bars scale to the current top project and show points and percent of total.</p>
+            </div>
+            <div class="tutorial-slide" data-idx="4">
+              <h4>Turn Off Tutorial</h4>
+              <p>Uncheck the tiny box in the lower-right corner to hide these instructions anytime.</p>
+            </div>
+          </div>
+          <div class="tutorial-nav">
+            <button type="button" id="ccTutPrev">◀</button>
+            <button type="button" id="ccTutNext">▶</button>
+          </div>
+        </div>
+
+        <label class="tutorial-toggle" title="Toggle tutorial overlay">
+          <input type="checkbox" id="ccTutorialToggle" checked>
+          <span class="label">Tutorial</span>
+        </label>
       </div>
 
       <!-- Right column menu (300px) -->
@@ -101,10 +140,7 @@
           <li data-key="Curator Discount"         data-active="true">Curator Discount</li>
         </ul>
 
-        <!-- Bottom glass button -->
-        <div class="tutorial-wrap">
-          <button class="glass-btn glass-gray" id="tutorialBtn" type="button">TUTORIAL</button>
-        </div>
+        <!-- Bottom area intentionally empty (tutorial toggle lives on screen) -->
       </aside>
     </section>
   </div>
@@ -118,7 +154,7 @@
     --steel: #9aa3ad;             /* light steel */
     --steel-strong: #7e8791;
     --gunmetal: #0f141a;          /* page bg */
-    --screen: #15181c;            /* screen fill */
+    --screen: #1a1f25;            /* screen fill (slightly brighter) */
     --teal: #0bd3d3;              /* accent glow */
     --frame-thickness: 20px;      /* visible rim */
     --pulse-max-width: 1260px;    /* wrapper max width */
@@ -202,6 +238,8 @@
     border-top-width: 8px;
     border-radius: 4px;
     position: relative;
+    display: flex;             /* allow inner to size and scroll */
+    overflow: hidden;          /* keep content within the frame */
     box-shadow:
       inset 0 0 0 1px rgba(255,255,255,0.05),
       inset 0 -10px 18px rgba(0,0,0,0.6);
@@ -213,6 +251,10 @@
     padding: 18px 26px;
     color: #e6eaef;
     font-family: Georgia, serif;
+    flex: 1 1 auto;            /* fill available height */
+    min-height: 0;             /* allow child overflow calculations */
+    overflow: auto;            /* vertical scroll inside the screen */
+    overflow-x: auto;          /* handle wide tables on small screens */
   }
 
   .entry-menu{
@@ -240,7 +282,7 @@
     position:absolute; inset:0;
     z-index:-1;
     border-radius:6px;
-    filter: brightness(.9);
+    filter: brightness(1.08); /* bump texture visibility */
   }
   /* apply hex texture via helper class to the panel itself */
   .menu-list{ background-blend-mode: overlay; }
@@ -330,12 +372,49 @@
     url("data:image/svg+xml;utf8,\
       <svg xmlns='http://www.w3.org/2000/svg' width='60' height='52' viewBox='0 0 60 52'>\
         <defs><pattern id='h' width='30' height='26' patternUnits='userSpaceOnUse'>\
-          <polygon points='15,0 30,7 30,19 15,26 0,19 0,7' fill='%231c2025' stroke='%23353a42' stroke-width='2'/>\
+          <polygon points='15,0 30,7 30,19 15,26 0,19 0,7' fill='%231e2329' stroke='%233a4048' stroke-width='2'/>\
         </pattern></defs><rect width='60' height='52' fill='url(%23h)'/>\
       </svg>");
     background-repeat: repeat;
     background-size: auto;
   }
+
+  /* ======================= Tutorial overlay ======================= */
+  .tutorial-toggle{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,0,0,.35);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 6px;
+    padding: 6px 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .tutorial-toggle input{ width:16px; height:16px; cursor:pointer; }
+  .tutorial-toggle .label{ color:#cfd6dd; font-size:12px; opacity:.8; user-select:none; display:none; }
+
+  .tutorial-overlay{
+    position: absolute;
+    inset: 14px 14px 36px 14px; /* leave room for bottom rim and toggle */
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.35)), #1a1e24;
+    border: 1px solid rgba(154,163,173,.5);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 12px 28px rgba(0,0,0,.6);
+    display: none;
+    color: #e6eaef;
+  }
+  .tutorial-overlay.is-open{ display:block; }
+  .tutorial-head{ display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.06); }
+  .tutorial-title{ margin:0; font-size:22px; }
+  .tutorial-body{ height: calc(100% - 54px); display:flex; align-items:stretch; }
+  .tutorial-slide{ flex:1; display:none; padding:18px 20px; overflow:auto; }
+  .tutorial-slide.is-active{ display:block; }
+  .tutorial-nav{ position:absolute; inset:auto 16px 16px 16px; display:flex; justify-content:space-between; pointer-events:none; }
+  .tutorial-nav button{ pointer-events:auto; appearance:none; border:1px solid rgba(154,163,173,.55); background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0)); color:#e6eaef; border-radius:8px; padding:8px 12px; font-weight:800; cursor:pointer; }
+  .tutorial-slide img{ max-width:100%; height:auto; display:block; border-radius:6px; box-shadow: 0 6px 18px rgba(0,0,0,.5); }
 
   /* ======================= Greenlight (scoped) ======================= */
   #greenlight .phase-nav{ display:flex; gap:10px; margin: 2px 0 14px; }
@@ -350,13 +429,33 @@
   #greenlight .vote-title{ font-size:28px; font-weight:800; margin:0 0 8px; }
   #greenlight .vote-sub{ opacity:.8; margin:0 0 18px; font-size:14px; }
   #greenlight .vote-grid{ border-collapse:collapse; width:100%; }
-  #greenlight .vote-grid th, #greenlight .vote-grid td{ padding:8px 10px; }
+  #greenlight .vote-grid{ table-layout: fixed; }
+  /* Gently shift the table left to use unused inner padding */
+  #greenlight .vote-left .vote-grid{ margin-left: -26px; }
+  #greenlight .vote-grid th, #greenlight .vote-grid td{ padding:8px 10px; vertical-align: middle; }
   #greenlight .vote-grid thead th{ text-align:center; font-weight:800; color:#e8edf2; }
   #greenlight .proj-name{ font-weight:800; text-align:right; white-space:nowrap; }
-  #greenlight .rot{ writing-mode: vertical-rl; transform: rotate(180deg); font-weight:800; opacity:.85; }
+  /* Column widths so headers align with the checkbox columns */
+  #greenlight .vote-grid th:first-child,
+  #greenlight .vote-grid td:first-child{ width: 360px; } /* project name column */
+  #greenlight .vote-grid th.rot,
+  #greenlight .vote-grid td.cell{ width: 48px; }
+  #greenlight .rot{ writing-mode: vertical-rl; transform: rotate(180deg); font-weight:800; opacity:.85; margin:0 auto; }
   #greenlight .cell{ text-align:center; }
-  #greenlight .rankbox{ width:18px; height:18px; appearance:none; -webkit-appearance:none; border:2px solid #d5d8dc; border-radius:3px; display:inline-block; background:#2a2f36; box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(0,0,0,.5); cursor:pointer; }
-  #greenlight .rankbox:checked{ background: linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,0)); border-color:#fff; box-shadow: 0 0 0 2px rgba(255,255,255,.15), 0 0 12px rgba(255,255,255,.18); }
+  #greenlight .rankbox{ width:20px; height:20px; appearance:none; -webkit-appearance:none; border:2px solid #d5d8dc; border-radius:4px; display:inline-block; background:#2a2f36; box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(0,0,0,.5); cursor:pointer; transition: box-shadow .15s ease, background-color .15s ease, border-color .15s ease, background-size .15s ease; }
+  /* Clear, high-contrast checked state with a tick mark */
+  #greenlight .rankbox:checked{
+    background-color: #0bd3d3;
+    border-color: #0bd3d3;
+    box-shadow: 0 0 0 2px rgba(11,211,211,.25), 0 0 10px rgba(11,211,211,.35);
+    background-image: url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>\
+        <polyline points='4,10 9,15 16,6' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/>\
+      </svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px 14px;
+  }
   #greenlight .rankbox:focus{ outline:2px solid rgba(11,211,211,0.5); outline-offset:2px; }
   #greenlight .results-wrap{ flex:1; width:100%; }
   #greenlight .results-title{ font-size:28px; font-weight:800; margin:0 0 8px; }
@@ -431,11 +530,7 @@
     }
   });
 
-  // Tutorial button (demo) — shows basic site tutorial (not GL)
-  document.getElementById('tutorialBtn').addEventListener('click', ()=>{
-    showGreenlight(false);
-    clubContent.innerHTML = "<h2>Tutorial</h2><p>Use the right-side glass buttons to switch sections. Greyed items are not yet active.</p>";
-  });
+  // Sidebar tutorial button removed; overlay toggle is on the screen itself.
 
   // ======================= Greenlight module logic =======================
   (function(){
@@ -551,6 +646,42 @@
 
     // Buttons on results
     document.getElementById('changeBtn').addEventListener('click', ()=> setPhase('vote'));
-    document.getElementById('tutorialBtnGL').addEventListener('click', ()=> setPhase('instructions'));
+  })();
+
+  // ======================= Tutorial overlay (global for Curators Club) =======================
+  (function(){
+    const KEY_ON = 'cc:tutorial:on';
+    const KEY_SLIDE = 'cc:tutorial:slide';
+    const overlay = document.getElementById('ccTutorial');
+    const toggle = document.getElementById('ccTutorialToggle');
+    const slides = Array.from(overlay.querySelectorAll('.tutorial-slide'));
+    const prev = document.getElementById('ccTutPrev');
+    const next = document.getElementById('ccTutNext');
+    let idx = Math.max(0, Math.min(slides.length-1, parseInt(localStorage.getItem(KEY_SLIDE)||'0',10)||0));
+
+    function render(){
+      slides.forEach((s,i)=> s.classList.toggle('is-active', i===idx));
+      try{ localStorage.setItem(KEY_SLIDE, String(idx)); }catch{}
+    }
+    function setOpen(open){
+      overlay.classList.toggle('is-open', !!open);
+      toggle.checked = !!open;
+      try{ localStorage.setItem(KEY_ON, open? '1':'0'); }catch{}
+    }
+
+    // init
+    render();
+    const open = (localStorage.getItem(KEY_ON) ?? '1') !== '0';
+    setOpen(open);
+
+    // events
+    toggle.addEventListener('change', ()=> setOpen(toggle.checked));
+    prev.addEventListener('click', ()=>{ idx = (idx-1+slides.length)%slides.length; render(); });
+    next.addEventListener('click', ()=>{ idx = (idx+1)%slides.length; render(); });
+    document.addEventListener('keydown', (e)=>{
+      if(!overlay.classList.contains('is-open')) return;
+      if(e.key==='ArrowLeft'){ idx=(idx-1+slides.length)%slides.length; render(); }
+      if(e.key==='ArrowRight'){ idx=(idx+1)%slides.length; render(); }
+    });
   })();
 </script>
