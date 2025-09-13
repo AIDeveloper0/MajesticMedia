@@ -350,7 +350,8 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
 
 /* OUTER wrapper supplies 28px top spacing so footer sits flush */
 .sp-wrap {
-  padding: var(--outer-padding) 12px 0;
+  padding: var(--outer-padding) 12px; /* 28px top & bottom like Connect */
+  margin: 0;                         /* ensure no extra page margin */
   display:flex;
   justify-content:center;
   box-sizing: border-box;
@@ -360,7 +361,7 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
 .sp-frame {
   width: calc(100% - 48px);
   max-width: var(--max-width);
-  height: calc(100vh - 28px);
+  height: calc(100vh - 48px); /* match Connect/Pulse/Projects */
 
   border-radius: 6px;
   overflow: visible; /* scrolling moved to .sp-inner so topbar stays fixed */
@@ -405,8 +406,9 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
 /* TOP BAR: sits visually inside the frame and remains fixed while content scrolls */
 .sp-topbar {
   position: absolute;
-  left: calc(var(--frame-side-w) + 12px);
-  right: calc(var(--frame-side-w) + 12px + var(--scrollbar-w)); /* leave room for the scroll gutter */
+  /* Align the topbar texture width with the inner frame below */
+  left: var(--frame-inner-pad);
+  right: calc(var(--frame-inner-pad) + var(--scrollbar-w)); /* leave room for the scroll gutter */
   top: 12px;
   height: var(--frame-top-h);
   display:flex;
@@ -425,36 +427,58 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
 
 /* Tabs container */
 .sp-tabs {
-  display:flex;
+  /* 4 equal-width tabs across the bar */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--tab-gap);
-  align-items:center;
-  justify-content:center;
-  flex-wrap:wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 /* TAB BUTTONS: shortened to fit inside frame and glassy like Projects */
 .sp-tab{
-  min-width: var(--tab-min-w);
-  max-width: var(--tab-max-w);
+  /* make each tab fill its grid cell (25% of bar) */
+  width: 100%;
+  min-width: 0;        /* allow shrinking to fit grid */
+  max-width: none;
   height: var(--tab-h);
   padding: 6px 12px;
   display:flex;
   align-items:center;
   justify-content:center;
   box-sizing:border-box;
+
+  /* glassy, semi-transparent gold look (consistent with other pages) */
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02)),
-    linear-gradient(180deg, rgba(230,190,0,0.98), rgba(176,139,0,0.98));
-  border: 1px solid rgba(0,0,0,0.35);
+    linear-gradient(180deg, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.18) 55%, rgba(255,255,255,0.06) 100%),
+    rgba(230,190,0,0.28);
+  border: 2px solid rgba(0,0,0,0.85);
   border-radius:6px;
-  color:#081206; /* dark text reading on gold */
+  color:#ffffff;
   font-weight:700;
   cursor:pointer;
   user-select:none;
-  box-shadow: 0 6px 0 rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.14);
+  box-shadow:
+    0 6px 0 rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 -2px 0 rgba(0,0,0,0.6);
   transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
   position: relative;
   z-index:42; /* ensure buttons are above everything */
+}
+
+/* hover state like other glass buttons */
+.sp-tab:hover:not(.active),
+.sp-tab:focus-visible:not(.active){
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.14) 55%, rgba(255,255,255,0.08) 100%),
+    rgba(230,190,0,0.34);
+  border-color: rgba(0,0,0,0.92);
+  box-shadow:
+    0 7px 0 rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -2px 0 rgba(0,0,0,0.65);
 }
 
 /* sheen stripe on hover */
@@ -480,20 +504,13 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
 
 /* SELECTED tab: sunken + 1px gold border + subtle glow */
 .sp-tab.active{
-  background:
-    linear-gradient(180deg, rgba(0,0,0,0.46) 0%, rgba(0,0,0,0.22) 60%),
-    rgba(255,255,255,0);
+  background: linear-gradient(180deg, rgba(0,0,0,0.46), rgba(0,0,0,0.22));
   color: #fff;
   transform: translateY(-2px);
-
-  /* gold outline (1px) */
-  border: 1px solid var(--gold);
-
-  /* sunken inset + outer lift + glow */
+  border-color: rgba(0,0,0,0.95);
   box-shadow:
-    inset 0 -6px 10px rgba(0,0,0,0.6), /* sunken */
-    0 10px 0 rgba(0,0,0,0.6),           /* lift */
-    0 0 8px var(--gold-glow);           /* subtle gold glow */
+    inset 0 -6px 10px rgba(0,0,0,0.6),
+    0 10px 0 rgba(0,0,0,0.6);
 }
 
 /* SCROLLABLE INNER CONTENT */
@@ -607,7 +624,7 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
     --tab-max-w: 200px;
     --line-gap: 22px;
   }
-  .sp-topbar { top: 10px; padding:8px; right: calc(var(--frame-side-w) + 12px + var(--scrollbar-w)); }
+  .sp-topbar { top: 10px; padding:8px; left: var(--frame-inner-pad); right: calc(var(--frame-inner-pad) + var(--scrollbar-w)); }
   .sp-inner { padding:20px; top: calc(var(--frame-top-h) + 36px); }
 }
 @media (max-width:700px){
@@ -619,7 +636,7 @@ html,body{ margin:0; height:100%; background:#000; font-family: var(--font-main)
     --tab-max-w: 180px;
     --line-gap: 18px;
   }
-  .sp-topbar { top: 8px; padding:6px; right: calc(var(--frame-side-w) + 12px + var(--scrollbar-w)); }
+  .sp-topbar { top: 8px; padding:6px; left: var(--frame-inner-pad); right: calc(var(--frame-inner-pad) + var(--scrollbar-w)); }
   .sp-inner { padding:16px; top: calc(var(--frame-top-h) + 32px); }
 }
 

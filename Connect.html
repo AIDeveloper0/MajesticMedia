@@ -22,10 +22,22 @@
               </ul>
 
               <div class="crew-list" aria-label="Producers">
-                <!-- Crew cards will be inserted here -->
+                <!-- Crew card: replace name, title, blurb, and LinkedIn link -->
+                <article class="crew-card">
+                  <img class="crew-headshot" src="https://static1.squarespace.com/static/6891a6f0dcd941394db83fc9/t/68baf688ca62942ef28a2646/1757083272199/profile%2Bpic.webp" alt="Headshot"/>
+                  <div class="crew-meta">
+                    <h4 class="crew-name">Your Name</h4>
+                    <div class="crew-title">Executive Producer, Majestic Media</div>
+                    <p class="crew-blurb">Short bio here. I can port your bio from the old site, or you can provide updated copy.</p>
+                    <div class="crew-link">LinkedIn: <a href="https://www.linkedin.com/in/jonathan-jocham-75140160/" target="_blank" rel="noopener">Connect With Me On LinkedIn</a></div>
+                  </div>
+                </article>
               </div>
             </div>
           </div>
+
+          <!-- Divider between Crew and Join sections -->
+          <hr class="section-divider" aria-hidden="true" />
 
           <!-- PITCH TO JOIN -->
           <div class="panel pitch" id="pitch">
@@ -46,10 +58,14 @@
             </div>
           </div>
 
+          <!-- Divider between Join and FAQ sections -->
+          <hr class="section-divider" aria-hidden="true" />
+
           <!-- FAQ -->
           <div class="panel faq" id="faq">
             <h2>Frequently Asked Questions About Majestic Media</h2>
             <div class="panel-body">
+              <!-- Add or edit FAQs by duplicating a <details> block -->
               <details>
                 <summary>What is Majestic Media?</summary>
                 <p>A creative studio focused on developing compelling entertainment and media projects.</p>
@@ -76,7 +92,7 @@
         </div>
 
         <!-- RIGHT 1/3 (stacked boxes) -->
-        <aside class="connect-right" role="complementary" aria-label="Contact, Discord & Winston">
+        <aside class="connect-right" role="complementary" aria-label="Contact & Discord">
           <!-- CONTACT US -->
           <div class="panel contact" id="contact-us">
             <h3>Contact Majestic Media</h3>
@@ -102,22 +118,26 @@
                 <textarea id="contact-message" name="Message" rows="4" required></textarea>
 
                 <button type="submit" class="btn-submit">Send</button>
-                <p class="form-note">All submissions are sent to <a href="mailto:connect@majesticmediastudios.com">connect@majesticmediastudios.com</a>.</p>
               </form>
             </div>
           </div>
 
+          <!-- Divider between Contact form and Discord -->
+          <hr class="section-divider" aria-hidden="true" />
+
           <!-- DISCORD -->
           <div class="panel discord" id="discord">
             <h3 class="heading-with-icon">
-              <img
-                class="discord-icon"
-                src="https://static1.squarespace.com/static/6891a6f0dcd941394db83fc9/t/68ad472d208b9736ab8d4e0f/1756186413963/1000171755.jpg"
-                alt="Discord logo"
-                loading="lazy"
-                decoding="async"
-              />
-              <span>Discord</span>
+              <a class="discord-link" href="https://discord.com/" target="_blank" rel="noopener" aria-label="Open Discord">
+                <img
+                  class="discord-icon"
+                  src="https://static1.squarespace.com/static/6891a6f0dcd941394db83fc9/t/68ad472d208b9736ab8d4e0f/1756186413963/1000171755.jpg"
+                  alt="Discord logo"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span>Discord</span>
+              </a>
             </h3>
 
             <div class="panel-body">
@@ -127,12 +147,12 @@
                 offers a dedicated space for engaging in discussions, sharing insights, and actively contributing to the evolution of
                 Majestic Media.
               </p>
-              <p><a href="#" target="_blank" rel="noopener" aria-label="Discord invite link">[Discord Link]</a></p>
+              <!-- Link moved to the heading above (icon + word are clickable) -->
             </div>
           </div>
 
           <!-- WINSTON -->
-          <div class="panel winston" id="winston">
+          <div class="panel winston" id="winston" style="display:none">
             <h3>Winston</h3>
             <div class="panel-body">
               <p>
@@ -301,6 +321,14 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
   z-index: 2;
 }
 
+/* horizontal section dividers */
+.section-divider{
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.16), rgba(255,255,255,0));
+  margin: 6px 0 12px;
+}
+
 /* panel headings */
 .panel h2, .panel h3{
   margin: 0 0 20px 0;
@@ -333,6 +361,8 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
   transform: translateY(1px);/* optical tweak to align with baseline */
 }
 
+.discord-link{ display:inline-flex; align-items:center; gap:10px; text-decoration:none; color: var(--text-strong); }
+
 .panel .panel-body { color: var(--text-muted); font-size: 15px; line-height:1.6; }
 
 /* MEET THE CREW grid */
@@ -357,6 +387,7 @@ html,body{ margin:0; height:100%; background:var(--bg); font-family: Georgia, se
   object-fit: cover;
   border-radius: 8px;
   flex-shrink: 0;
+  margin-top: 6px; /* nudge image down for better vertical alignment */
 }
 .crew-meta{ display:flex; flex-direction:column; gap:6px; }
 .crew-name{ margin:0; font-size:18px; color: var(--text-strong); }
